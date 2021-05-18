@@ -1,0 +1,63 @@
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url(/img/coffee-rosetta-trio.jpg) no-repeat;
+  background-size: cover;
+  background-position: auto;
+  background-color: #504d51;
+  min-height: 100%;
+}
+
+.homebody {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url(/img/cafe_tables_in_alley.jpg) no-repeat;
+  background-size: cover;
+  background-position: auto;
+  background-color: #504d51;
+  min-height: 100%;
+}
+
+form {
+  padding: 20px;
+  margin-top: 60px;
+}
+
+form button,
+form h5 {
+  margin: 20px 0;
+}
+
+input[type='text']:not(.browser-default):focus:not([readonly]),
+input[type='email']:not(.browser-default):focus:not([readonly]),
+input[type='password']:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-color: #ec407a;
+  box-shadow: none;
+}
+
+.bk-nav {
+  margin: 0px 20px 0px 30px;
+}
+
+.tabs {
+  height: 40px;
+  color: black;
+}
+
+.itemtable {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.itemtable:link {
+  color: black;
+}
+.itemtable:visited {
+  color: black;
+}
