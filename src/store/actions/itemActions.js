@@ -4,50 +4,48 @@ export const createItem = (item) => {
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
     const profile = getState().firebase.profile;
-    
 
     firestore
-      .collection('cafes')
+      .collection("cafes")
       .doc(profile.defaultCafeId)
-      .collection('inventoryItems')
+      .collection("inventoryItems")
       .add({
         ...item,
         createdBy: authorId,
         dateCreated: new Date(),
       })
       .then(() => {
-        dispatch({ type: 'CREATE_ITEM_SUCCESS' });
+        dispatch({ type: "CREATE_ITEM_SUCCESS" });
       })
       .catch((err) => {
-        dispatch({ type: 'CREATE_ITEM_ERROR' }, err);
+        dispatch({ type: "CREATE_ITEM_ERROR" }, err);
       });
   };
 };
 
 export const createItemList = (itemList) => {
-  
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
     const profile = getState().firebase.profile;
 
-    console.log('profile: ', profile)
+    console.log("profile: ", profile);
 
     firestore
-      .collection('cafes')
+      .collection("cafes")
       .doc(profile.defaultCafeId)
-      .collection('inventoryList')
+      .collection("inventoryList")
       .add({
         ...itemList,
         createdBy: authorId,
         dateCreated: new Date(),
       })
       .then(() => {
-        dispatch({ type: 'CREATE_ITEM_SUCCESS' });
+        dispatch({ type: "CREATE_ITEM_SUCCESS" });
       })
       .catch((err) => {
-        dispatch({ type: 'CREATE_ITEM_ERROR' }, err);
+        dispatch({ type: "CREATE_ITEM_ERROR" }, err);
       });
   };
 };
@@ -60,19 +58,49 @@ export const addItem = (item) => {
     const profile = getState().firebase.profile;
 
     firestore
-      .collection('cafes')
+      .collection("cafes")
       .doc(profile.defaultCafeId)
-      .collection('inventoryList')
+      .collection("inventoryList")
       .add({
         ...item,
         createdBy: authorId,
         dateCreated: new Date(),
       })
       .then(() => {
-        dispatch({ type: 'CREATE_ITEM_SUCCESS' });
+        dispatch({ type: "CREATE_ITEM_SUCCESS" });
       })
       .catch((err) => {
-        dispatch({ type: 'CREATE_ITEM_ERROR' }, err);
+        dispatch({ type: "CREATE_ITEM_ERROR" }, err);
+      });
+  };
+};
+
+export const addItemToList = (listId, itemId) => {
+  return (dispatch, getState, { getFirebase }) => {
+    // make async call to database
+    const firestore = getFirebase().firestore();
+    const { inventoryLists } = getState()?.firestore?.data;
+    const profile = getState().firebase.profile;
+
+    const items = inventoryLists[listId]?.items;
+
+    firestore
+      .collection("cafes")
+      .doc(profile.defaultCafeId)
+      .collection("inventoryList")
+      .doc(listId)
+      .update({
+        items: [...items, itemId],
+        dateUpdated: new Date(),
+        itemCount: items.length,
+      })
+      .then(() => {
+        dispatch({
+          type: "ADD_TO_INVENTORY_SUCCESS",
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
       });
   };
 };
