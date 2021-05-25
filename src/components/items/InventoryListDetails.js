@@ -7,7 +7,12 @@ import { Link } from "react-router-dom";
 import { addItemToList } from "../../store/actions/itemActions";
 
 class InventoryListDetails extends React.Component {
+  state = {
+    search: "",
+  };
+
   render() {
+    const { search } = this.state;
     //const id = props.match.params.id;
     const { inventoryList, inventoryItems, auth, location } = this.props;
     const listId = location.pathname.split("/")[2];
@@ -22,6 +27,12 @@ class InventoryListDetails extends React.Component {
             <div className="card z-depth-0">
               <div className="card-content">
                 <span className="card-title">Pick from this list</span>
+                <input
+                  type="text"
+                  placeholder="Search item"
+                  value={search}
+                  onChange={(e) => this.setState({ search: e.target.value })}
+                />
                 <table className="responsive-tabe highlight centered itemtable">
                   <thead>
                     <tr>
@@ -31,26 +42,30 @@ class InventoryListDetails extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {inventoryItems?.map((item, i) => (
-                      <tr key={i}>
-                        <td>
-                          <Link to={"/item/" + item.id} key={item.id}>
-                            View
-                          </Link>
-                          <a
-                            onClick={() => {
-                              this.props.addItemToList(listId, item.id);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {" "}
-                            Add{" "}
-                          </a>
-                        </td>
-                        <td>{item.name}</td>
-                        <td>{item.par}</td>
-                      </tr>
-                    ))}
+                    {inventoryItems
+                      ?.filter((item) =>
+                        search.length > 0 ? item?.name?.includes(search) : true
+                      )
+                      ?.map((item, i) => (
+                        <tr key={i}>
+                          <td>
+                            <Link to={"/item/" + item.id} key={item.id}>
+                              View
+                            </Link>
+                            <a
+                              onClick={() => {
+                                this.props.addItemToList(listId, item.id);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {" "}
+                              Add{" "}
+                            </a>
+                          </td>
+                          <td>{item.name}</td>
+                          <td>{item.par}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -147,8 +162,6 @@ export default compose(
     if (!props.profile.defaultCafeId) {
       return [];
     }
-
-    console.log(props.profile.defaultCafeId, ownProps.match.params.id);
 
     return [
       {
