@@ -6,106 +6,110 @@ import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { addItemToList } from "../../store/actions/itemActions";
 
-export const InventoryListDetails = (props) => {
-  //const id = props.match.params.id;
-  const { inventoryList, inventoryItems, auth, location } = props;
-  const listId = location.pathname.split("/")[2];
+class InventoryListDetails extends React.Component {
+  render() {
+    //const id = props.match.params.id;
+    const { inventoryList, inventoryItems, auth, location } = this.props;
+    const listId = location.pathname.split("/")[2];
 
-  if (!auth.uid) return <Redirect to="/signin" />;
-  // console.log('props: ', props);
-  if (inventoryList) {
-    //   if (inventoryItems) {
-    return (
-      <div>
-        <div className="container section project-details">
-          <div className="card z-depth-0">
-            <div className="card-content">
-              <span className="card-title">Pick from this list</span>
-              <table className="responsive-tabe highlight centered itemtable">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Item name</th>
-                    <th>par quantity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inventoryItems?.map((item, i) => (
-                    <tr key={i}>
-                      <td>
-                        <Link to={"/item/" + item.id} key={item.id}>
-                          View
-                        </Link>
-                        <a
-                          onClick={() => {
-                            props.addItemToList(listId, item.id);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {" "}
-                          Add{" "}
-                        </a>
-                      </td>
-                      <td>{item.name}</td>
-                      <td>{item.par}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div className="container section project-details">
-          <div className="card z-depth-0">
-            <div className="card-content">
-              <span className="card-title">{inventoryList.name}</span>
-              <p>description: {inventoryList.description}</p>
-            </div>
-
-            <div className="card-action white ligthen-4 grey-text">
-              <div>
+    if (!auth.uid) return <Redirect to="/signin" />;
+    // console.log('props: ', props);
+    if (inventoryList) {
+      //   if (inventoryItems) {
+      return (
+        <div>
+          <div className="container section project-details">
+            <div className="card z-depth-0">
+              <div className="card-content">
+                <span className="card-title">Pick from this list</span>
                 <table className="responsive-tabe highlight centered itemtable">
                   <thead>
                     <tr>
-                      <th>Qty.</th>
-                      <th>Item</th>
-                      <th>Urgency</th>
+                      <th></th>
+                      <th>Item name</th>
+                      <th>par quantity</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {inventoryList?.items?.map((itemId, i) => {
-                      const item = inventoryItems.find(
-                        (item) => item.id === itemId
-                      );
-                      return (
-                        <tr key={i}>
-                          <td>{item.par}</td>
-                          <td>
-                            <Link to={"/item/" + item.id} key={item.id}>
-                              {item.name}
-                            </Link>
-                          </td>
-                          <td>{item.urgency}</td>
-                        </tr>
-                      );
-                    })}
+                    {inventoryItems?.map((item, i) => (
+                      <tr key={i}>
+                        <td>
+                          <Link to={"/item/" + item.id} key={item.id}>
+                            View
+                          </Link>
+                          <a
+                            onClick={() => {
+                              this.props.addItemToList(listId, item.id);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {" "}
+                            Add{" "}
+                          </a>
+                        </td>
+                        <td>{item.name}</td>
+                        <td>{item.par}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+
+          <div className="container section project-details">
+            <div className="card z-depth-0">
+              <div className="card-content">
+                <span className="card-title">{inventoryList.name}</span>
+                <p>description: {inventoryList.description}</p>
+              </div>
+
+              <div className="card-action white ligthen-4 grey-text">
+                <div>
+                  <table className="responsive-tabe highlight centered itemtable">
+                    <thead>
+                      <tr>
+                        <th>Qty.</th>
+                        <th>Item</th>
+                        <th>Urgency</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {inventoryList?.items?.map((itemId, i) => {
+                        const item = inventoryItems?.find(
+                          (item) => item.id === itemId
+                        );
+                        return item ? (
+                          <tr key={i}>
+                            <td>{item.par}</td>
+                            <td>
+                              <Link to={"/item/" + item.id} key={item.id}>
+                                {item.name}
+                              </Link>
+                            </td>
+                            <td>{item.urgency}</td>
+                          </tr>
+                        ) : (
+                          <tr key={i} />
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container center">
-        <p>Loading item...</p>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="container center">
+          <p>Loading item...</p>
+        </div>
+      );
+    }
   }
-};
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -140,16 +144,20 @@ export default compose(
     //    console.log('defaultCafe: ', props.profile.defaultCafe);
     //    console.log('ownProps: ', ownProps.match.params.id);
 
-    if (!props.profile.defaultCafe) {
+    if (!props.profile.defaultCafeId) {
       return [];
     }
+
+    console.log(props.profile.defaultCafeId, ownProps.match.params.id);
 
     return [
       {
         collection: "cafes",
-        doc: props.profile.defaultCafe,
+        doc: props.profile.defaultCafeId,
         subcollections: [
-          { collection: "inventoryLists", doc: ownProps.match.params.id },
+          {
+            collection: "inventoryList",
+          },
         ],
         storeAs: "inventoryLists",
       },
@@ -157,6 +165,7 @@ export default compose(
         collection: "cafes",
         doc: props.profile.defaultCafeId,
         subcollections: [{ collection: "inventoryItems" }],
+        storeAs: "inventoryItems",
       },
     ];
   })
