@@ -9,12 +9,20 @@ import { addItemToList } from "../../store/actions/itemActions";
 class InventoryListDetails extends React.Component {
   state = {
     search: "",
+    category: "",
+    show: false,
   };
 
   render() {
-    const { search } = this.state;
+    const { search, category, show } = this.state;
     //const id = props.match.params.id;
-    const { inventoryList, inventoryItems, auth, location } = this.props;
+    const {
+      inventoryList,
+      inventoryItems,
+      auth,
+      location,
+      categories,
+    } = this.props;
     const listId = location.pathname.split("/")[2];
 
     if (!auth.uid) return <Redirect to="/signin" />;
@@ -27,12 +35,41 @@ class InventoryListDetails extends React.Component {
             <div className="card z-depth-0">
               <div className="card-content">
                 <span className="card-title">Pick from this list</span>
-                <input
-                  type="text"
-                  placeholder="Search item"
-                  value={search}
-                  onChange={(e) => this.setState({ search: e.target.value })}
-                />
+                <div className="row">
+                  <input
+                    className="col s8"
+                    type="text"
+                    placeholder="Search item"
+                    value={search}
+                    onChange={(e) => this.setState({ search: e.target.value })}
+                  />
+                  <div className="col s3 offset-s1 ">
+                    <a
+                      className="dropdown-trigger btn"
+                      onClick={() => this.setState({ show: true })}
+                    >
+                      {category ? category : "All categories"}
+                    </a>
+
+                    <ul
+                      style={show ? styles.dropdown : {}}
+                      className="dropdown-content"
+                    >
+                      {categories?.map((category, i) => (
+                        <li key={i}>
+                          <a
+                            onClick={() =>
+                              this.setState({ category, show: false })
+                            }
+                          >
+                            {category}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
                 <table className="responsive-tabe highlight centered itemtable">
                   <thead>
                     <tr>
@@ -44,7 +81,14 @@ class InventoryListDetails extends React.Component {
                   <tbody>
                     {inventoryItems
                       ?.filter((item) =>
-                        search.length > 0 ? item?.name?.includes(search) : true
+                        category ? item?.category === category : true
+                      )
+                      ?.filter((item) =>
+                        search.length > 0
+                          ? item?.name
+                              ?.toLowerCase()
+                              .includes(search.toLowerCase())
+                          : true
                       )
                       ?.map((item, i) => (
                         <tr key={i}>
@@ -150,6 +194,7 @@ const mapStateToProps = (state, ownProps) => {
     profile: state.firebase.profile,
     inventoryList: inventoryList,
     inventoryItems: inventoryItems,
+    categories: state.item.categories,
   };
 };
 
@@ -183,3 +228,13 @@ export default compose(
     ];
   })
 )(InventoryListDetails);
+
+const styles = {
+  dropdown: {
+    left: "inherit",
+    top: "inherit",
+    padding: 0,
+    opacity: 1,
+    display: "block",
+  },
+};
