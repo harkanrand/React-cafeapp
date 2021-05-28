@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { createItem } from '../../store/actions/itemActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createItem } from "../../store/actions/itemActions";
+import { Redirect } from "react-router-dom";
 
 class CreateItem extends Component {
   state = {
-    name: '',
-    description: '',
-    par: '',
+    name: "",
+    description: "",
+    par: "",
+    category: "",
   };
 
   handleChange = (e) => {
@@ -19,11 +20,13 @@ class CreateItem extends Component {
     e.preventDefault();
     //console.log(this.state);
     this.props.createItem(this.state);
-    this.props.history.push('/itemList');
+    this.props.history.push("/itemList");
   };
 
   render() {
     const { auth } = this.props;
+    const { category } = this.state;
+
     //   console.log(this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -54,8 +57,27 @@ class CreateItem extends Component {
           <div className="input-field">
             <label htmlFor="category">Category</label>
             <input type="text" id="category" onChange={this.handleChange} />
+            <a
+              className="dropdown-trigger btn"
+              onClick={() => this.setState({ show: true })}
+            >
+              {category ? category : "All categories"}
+            </a>
+
+            <ul
+              style={show ? styles.dropdown : {}}
+              className="dropdown-content"
+            >
+              {categories?.map((category, i) => (
+                <li key={i}>
+                  <a onClick={() => this.setState({ category, show: false })}>
+                    {category}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-          
+
           <div className="input-field">
             <button className="btn pink lighten-1 z-depth-0">Create</button>
           </div>
