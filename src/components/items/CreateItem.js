@@ -9,6 +9,7 @@ class CreateItem extends Component {
     description: "",
     par: "",
     category: "",
+    show: false,
   };
 
   handleChange = (e) => {
@@ -24,9 +25,9 @@ class CreateItem extends Component {
   };
 
   render() {
-    const { auth } = this.props;
-    const { category } = this.state;
-
+    const { auth, categories } = this.props;
+    const { category, show } = this.state;
+    console.log(this.props);
     //   console.log(this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -55,13 +56,11 @@ class CreateItem extends Component {
           </div>
 
           <div className="input-field">
-            <label htmlFor="category">Category</label>
-            <input type="text" id="category" onChange={this.handleChange} />
             <a
               className="dropdown-trigger btn"
               onClick={() => this.setState({ show: true })}
             >
-              {category ? category : "All categories"}
+              {category ? category : "Select Category"}
             </a>
 
             <ul
@@ -88,9 +87,10 @@ class CreateItem extends Component {
 }
 
 const mapStateToProps = (state) => {
-  //  console.log(state);
+  console.log(state);
   return {
     auth: state.firebase.auth,
+    categories: state.item.categories,
   };
 };
 
@@ -101,3 +101,13 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateItem);
+
+const styles = {
+  dropdown: {
+    left: "inherit",
+    top: "inherit",
+    padding: 0,
+    opacity: 1,
+    display: "block",
+  },
+};
