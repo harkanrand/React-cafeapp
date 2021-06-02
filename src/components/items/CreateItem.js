@@ -55,26 +55,35 @@ class CreateItem extends Component {
             <input type="text" id="par" onChange={this.handleChange} />
           </div>
 
-          <div className="input-field">
-            <a
-              className="dropdown-trigger btn"
-              onClick={() => this.setState({ show: true })}
-            >
-              {category ? category : "Select Category"}
-            </a>
+          <div className="input-field row">
+            <input
+              className="col s8"
+              type="text"
+              id="category"
+              value={category}
+              disabled
+            />
+            <div className="col s3 offset-s1">
+              <a
+                className="dropdown-trigger btn"
+                onClick={() => this.setState({ show: true })}
+              >
+                Select Category
+              </a>
 
-            <ul
-              style={show ? styles.dropdown : {}}
-              className="dropdown-content"
-            >
-              {categories?.map((category, i) => (
-                <li key={i}>
-                  <a onClick={() => this.setState({ category, show: false })}>
-                    {category}
-                  </a>
-                </li>
-              ))}
-            </ul>
+              <ul
+                style={show ? styles.dropdown : {}}
+                className="dropdown-content"
+              >
+                {categories?.map((category, i) => (
+                  <li key={i}>
+                    <a onClick={() => this.setState({ category, show: false })}>
+                      {category}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="input-field">
