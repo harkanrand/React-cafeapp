@@ -4,11 +4,8 @@ export const createItem = (item) => {
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
     const profile = getState().firebase.profile;
-<<<<<<< HEAD
-=======
 
     delete item.show;
->>>>>>> ddfe3eef5d283888fe1498c0bc98cc8eea79cea6
 
     firestore
       .collection("cafes")
@@ -76,7 +73,6 @@ export const addItem = (item) => {
       })
       .catch((err) => {
         dispatch({ type: "CREATE_ITEM_ERROR" }, err);
-<<<<<<< HEAD
       });
   };
 };
@@ -107,8 +103,6 @@ export const addItemToList = (listId, itemId) => {
       })
       .catch((err) => {
         dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
-=======
->>>>>>> ddfe3eef5d283888fe1498c0bc98cc8eea79cea6
       });
   };
 };
