@@ -75,13 +75,20 @@ class CreateItem extends Component {
                 style={show ? styles.dropdown : {}}
                 className="dropdown-content"
               >
-                {categories?.map((category, i) => (
-                  <li key={i}>
-                    <a onClick={() => this.setState({ category, show: false })}>
-                      {category}
-                    </a>
-                  </li>
-                ))}
+                {categories?.map(
+                  (category, i) =>
+                    category && (
+                      <li key={i}>
+                        <a
+                          onClick={() =>
+                            this.setState({ category, show: false })
+                          }
+                        >
+                          {category}
+                        </a>
+                      </li>
+                    )
+                )}
               </ul>
             </div>
           </div>

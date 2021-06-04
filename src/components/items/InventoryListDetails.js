@@ -55,17 +55,20 @@ class InventoryListDetails extends React.Component {
                       style={show ? styles.dropdown : {}}
                       className="dropdown-content"
                     >
-                      {categories?.map((category, i) => (
-                        <li key={i}>
-                          <a
-                            onClick={() =>
-                              this.setState({ category, show: false })
-                            }
-                          >
-                            {category}
-                          </a>
-                        </li>
-                      ))}
+                      {categories?.map((name, i) => {
+                        if (!category && !name) return false;
+                        return (
+                          <li key={i}>
+                            <a
+                              onClick={() =>
+                                this.setState({ category: name, show: false })
+                              }
+                            >
+                              {!name ? "All categories" : name}
+                            </a>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>

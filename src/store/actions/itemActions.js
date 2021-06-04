@@ -106,3 +106,28 @@ export const addItemToList = (listId, itemId) => {
       });
   };
 };
+
+export const updateItem = (itemId, item) => {
+  return (dispatch, getState, { getFirebase }) => {
+    // make async call to database
+    const firestore = getFirebase().firestore();
+    const profile = getState().firebase.profile;
+
+    firestore
+      .collection("cafes")
+      .doc(profile.defaultCafeId)
+      .collection("inventoryItems")
+      .doc(itemId)
+      .update({
+        ...item,
+      })
+      .then(() => {
+        dispatch({
+          type: "ADD_TO_INVENTORY_SUCCESS",
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
+      });
+  };
+};
