@@ -4,7 +4,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import { updateItem } from "../../store/actions/itemActions";
-
+import Details from "../utils/Details";
 class ItemDetails extends React.Component {
   state = {
     edit: false,
@@ -57,92 +57,63 @@ class ItemDetails extends React.Component {
 
     if (inventoryItem) {
       return (
-        <div className="container section project-details">
-          <div className="card z-depth-0">
-            <div className="card-content">
-              <button
-                onClick={() => this.updateItem()}
-                className="waves-effect waves-light btn pink lighten-1 z-depth-0"
-              >
-                {edit ? "Save" : "Edit"}
-              </button>
-            </div>
+        <Details
+          items={items}
+          setState={this.setState.bind(this)}
+          updateItem={this.updateItem.bind(this)}
+          edit={edit}
+          renderExtra={() => (
+            <div>
+              {edit ? (
+                <div className="input-field row">
+                  <input
+                    className="col s8"
+                    type="text"
+                    id="category"
+                    value={category}
+                    disabled
+                  />
+                  <div className="col s3 offset-s1">
+                    <a
+                      className="dropdown-trigger btn"
+                      onClick={() => this.setState({ showCategories: true })}
+                    >
+                      Select Category
+                    </a>
 
-            <div className="card-action white ligthen-4 grey-text">
-              {items.map(({ key, value, label }, i) => (
-                <div key={i}>
-                  {edit ? (
-                    <>
-                      <label htmlFor={key}>{label}</label>
-                      <input
-                        id={key}
-                        type="text"
-                        value={value}
-                        onChange={(e) =>
-                          this.setState({ [key]: e.target.value })
-                        }
-                      />
-                    </>
-                  ) : (
-                    <p>
-                      {label}: <br />
-                      {value}
-                    </p>
-                  )}
-                </div>
-              ))}
-              <div>
-                {edit ? (
-                  <div className="input-field row">
-                    <input
-                      className="col s8"
-                      type="text"
-                      id="category"
-                      value={category}
-                      disabled
-                    />
-                    <div className="col s3 offset-s1">
-                      <a
-                        className="dropdown-trigger btn"
-                        onClick={() => this.setState({ showCategories: true })}
-                      >
-                        Select Category
-                      </a>
-
-                      <ul
-                        style={showCategories ? styles.dropdown : {}}
-                        className="dropdown-content"
-                      >
-                        {categories?.map(
-                          (category, i) =>
-                            category && (
-                              <li key={i}>
-                                <a
-                                  onClick={() =>
-                                    this.setState({
-                                      category,
-                                      showCategories: false,
-                                    })
-                                  }
-                                >
-                                  {category}
-                                </a>
-                              </li>
-                            )
-                        )}
-                      </ul>
-                    </div>
+                    <ul
+                      style={showCategories ? styles.dropdown : {}}
+                      className="dropdown-content"
+                    >
+                      {categories?.map(
+                        (category, i) =>
+                          category && (
+                            <li key={i}>
+                              <a
+                                onClick={() =>
+                                  this.setState({
+                                    category,
+                                    showCategories: false,
+                                  })
+                                }
+                              >
+                                {category}
+                              </a>
+                            </li>
+                          )
+                      )}
+                    </ul>
                   </div>
-                ) : (
-                  <p>
-                    Category: <br />
-                    {category}
-                  </p>
-                )}
-              </div>
+                </div>
+              ) : (
+                <p>
+                  Category: <br />
+                  {category}
+                </p>
+              )}
             </div>
-          </div>
-        </div>
+          )}
+        />
       );
     } else {
       return (

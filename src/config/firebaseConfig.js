@@ -23,7 +23,7 @@ const sergenFbConfig = {
   appId: "1:588059255308:web:55a3c75a57bde381dcc429",
 };
 
-firebase.initializeApp(fbConfig);
+firebase.initializeApp(sergenFbConfig);
 //firebase.firestore().settings({ timestampsInSnapshots: true });
 
 export default firebase;
