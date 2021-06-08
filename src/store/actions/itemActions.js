@@ -94,7 +94,7 @@ export const addItemToList = (listId, itemId) => {
       .update({
         items: [...items, itemId],
         dateUpdated: new Date(),
-        itemCount: items.length,
+        itemCount: items.length + 1,
       })
       .then(() => {
         dispatch({

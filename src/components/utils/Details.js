@@ -10,7 +10,7 @@ class Details extends React.Component {
         <div className="card z-depth-0">
           <div className="card-content">
             <button
-              onClick={() => this.props.updateItem()}
+              onClick={() => this.props.action()}
               className="waves-effect waves-light btn pink lighten-1 z-depth-0"
             >
               {edit ? "Save" : "Edit"}
@@ -40,7 +40,7 @@ class Details extends React.Component {
                 )}
               </div>
             ))}
-            {this.props.renderExtra()}
+            {this.props.renderExtra?.()}
           </div>
         </div>
       </div>

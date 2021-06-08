@@ -5,6 +5,7 @@ import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import { updateItem } from "../../store/actions/itemActions";
 import Details from "../utils/Details";
+
 class ItemDetails extends React.Component {
   state = {
     edit: false,
@@ -27,30 +28,22 @@ class ItemDetails extends React.Component {
   render() {
     //const id = props.match.params.id;
     const { inventoryItem, auth, categories } = this.props;
-    const {
-      edit,
-      name,
-      par,
-      description,
-      category,
-      showCategories,
-    } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     const items = [
       {
         key: "name",
-        value: name,
+        value: this.state.name,
         label: "Name",
       },
       {
         key: "par",
-        value: par,
+        value: this.state.par,
         label: "Par amount",
       },
       {
         key: "description",
-        value: description,
+        value: this.state.description,
         label: "Description",
       },
     ];
@@ -61,16 +54,16 @@ class ItemDetails extends React.Component {
           items={items}
           setState={this.setState.bind(this)}
           updateItem={this.updateItem.bind(this)}
-          edit={edit}
+          edit={this.state.edit}
           renderExtra={() => (
             <div>
-              {edit ? (
+              {this.state.edit ? (
                 <div className="input-field row">
                   <input
                     className="col s8"
                     type="text"
                     id="category"
-                    value={category}
+                    value={this.state.category}
                     disabled
                   />
                   <div className="col s3 offset-s1">
@@ -82,7 +75,7 @@ class ItemDetails extends React.Component {
                     </a>
 
                     <ul
-                      style={showCategories ? styles.dropdown : {}}
+                      style={this.state.showCategories ? styles.dropdown : {}}
                       className="dropdown-content"
                     >
                       {categories?.map(
@@ -108,7 +101,7 @@ class ItemDetails extends React.Component {
               ) : (
                 <p>
                   Category: <br />
-                  {category}
+                  {this.state.category}
                 </p>
               )}
             </div>
