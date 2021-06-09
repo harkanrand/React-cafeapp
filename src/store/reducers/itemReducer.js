@@ -15,6 +15,10 @@ const itemReducer = (state = initState, action) => {
       return state;
     case "ADD_TO_INVENTORY_ERROR":
       return state;
+    case "UPDATE_ITEM_SUCCESS":
+      return { ...state };
+    case "UPDATE_ITEM_ERROR":
+      return { ...state };
     default:
       return state;
   }

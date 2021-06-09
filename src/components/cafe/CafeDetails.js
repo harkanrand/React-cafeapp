@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 //import moment from 'moment';
 //import { InventorySummaryCard } from './InventorySummaryCard';
 
 export const CafeDetails = (props) => {
   const { profile, auth } = props;
-  console.log('props: ', props);
+  console.log("props: ", props);
 
   if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -22,7 +22,7 @@ export const CafeDetails = (props) => {
           <div className="card-action white ligthen-4 grey-text">
             <div>
               <p>
-                {profile.defaultCafeRole}: {profile.firstName}{' '}
+                {profile.defaultCafeRole}: {profile.firstName}{" "}
                 {profile.lastName}
               </p>
             </div>
@@ -94,7 +94,7 @@ export const CafeDetails = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  //console.log(state);
 
   return {
     auth: state.firebase.auth,
@@ -107,7 +107,7 @@ const mapStateToProps = (state) => {
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([{ collection: 'users' }]),
+  firestoreConnect([{ collection: "users" }]),
   firestoreConnect((props, ownProps) => {
     //    console.log('defaultCafe: ', props.profile.defaultCafe);
     //    console.log('ownProps: ', ownProps.match.params.id);
@@ -118,12 +118,12 @@ export default compose(
 
     return [
       {
-        collection: 'cafes',
+        collection: "cafes",
         doc: props.profile.defaultCafe,
         subcollections: [
-          { collection: 'inventoryItems', doc: ownProps.match.params.id },
+          { collection: "inventoryItems", doc: ownProps.match.params.id },
         ],
-        storeAs: 'inventoryItems',
+        storeAs: "inventoryItems",
       },
     ];
   })

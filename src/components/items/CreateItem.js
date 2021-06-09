@@ -103,7 +103,6 @@ class CreateItem extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     auth: state.firebase.auth,
     categories: state.item.categories,

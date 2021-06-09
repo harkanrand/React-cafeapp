@@ -4,6 +4,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import Details from "../utils/Details";
+import { updateSupplier } from "../../store/actions/supplierActions";
 
 class SupplierDetails extends React.Component {
   state = {
@@ -21,9 +22,34 @@ class SupplierDetails extends React.Component {
   };
 
   updateSupplier() {
-    const { name, par, description, category, edit } = this.state;
-    const { itemId } = this.props;
+    const {
+      name,
+      city,
+      description,
+      state,
+      address,
+      contact,
+      email,
+      zip,
+      phoneNumber,
+      nickName,
+      edit,
+    } = this.state;
+    const { supplierId } = this.props;
 
+    if (edit)
+      this.props.updateSupplier(supplierId, {
+        name,
+        city,
+        description,
+        state,
+        address,
+        contact,
+        email,
+        zip,
+        phoneNumber,
+        nickName,
+      });
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
@@ -108,6 +134,12 @@ class SupplierDetails extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSupplier: (supplierId, supplier) =>
+      dispatch(updateSupplier(supplierId, supplier)),
+  };
+};
 const mapStateToProps = (state, ownProps) => {
   //console.log(state);
 
@@ -118,10 +150,11 @@ const mapStateToProps = (state, ownProps) => {
   console.log("supplier: ", supplier);
   return {
     supplier: supplier,
+    supplierId: id,
     auth: state.firebase.auth,
   };
 };
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([{ collection: "suppliers" }])
 )(SupplierDetails);

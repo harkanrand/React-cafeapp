@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { createItemList } from '../../store/actions/itemActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createItemList } from "../../store/actions/itemActions";
+import { Redirect } from "react-router-dom";
 
 class CreateItemList extends Component {
   state = {
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     items: [],
     itemCount: 0,
   };
@@ -20,7 +20,7 @@ class CreateItemList extends Component {
     e.preventDefault();
     //console.log(this.state);
     this.props.createItemList(this.state);
-    this.props.history.push('/itemList');
+    this.props.history.push("/itemList");
   };
 
   render() {
@@ -57,7 +57,6 @@ class CreateItemList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     auth: state.firebase.auth,
   };

@@ -123,11 +123,11 @@ export const updateItem = (itemId, item) => {
       })
       .then(() => {
         dispatch({
-          type: "ADD_TO_INVENTORY_SUCCESS",
+          type: "UPDATE_ITEM_SUCCESS",
         });
       })
       .catch((err) => {
-        dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
+        dispatch({ type: "UPDATE_ITEM_ERROR" }, err);
       });
   };
 };

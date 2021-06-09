@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import UserSummary from './UserSummary';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from "react";
+import UserSummary from "./UserSummary";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 class UserList extends Component {
   render() {
@@ -20,7 +20,7 @@ class UserList extends Component {
             {users &&
               users.map((user) => {
                 return (
-                  <Link to={'/user/' + user.id} key={user.id}>
+                  <Link to={"/user/" + user.id} key={user.id}>
                     <UserSummary user={user} />
                   </Link>
                 );
@@ -36,7 +36,7 @@ class UserList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  //console.log(state);
   return {
     users: state.firestore.ordered.users,
     auth: state.firebase.auth,
@@ -61,5 +61,5 @@ export default compose(
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([{ collection: 'users' }])
+  firestoreConnect([{ collection: "users" }])
 )(UserList);

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import createCafe from '../../store/actions/cafeActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import createCafe from "../../store/actions/cafeActions";
+import { Redirect } from "react-router-dom";
 
 class CreateCafe extends Component {
   state = {
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    phoneNumber: '',
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    phoneNumber: "",
   };
 
   handleChange = (e) => {
@@ -21,12 +21,12 @@ class CreateCafe extends Component {
     e.preventDefault();
     //console.log(this.state);
     this.props.createCafe(this.state);
-    this.props.history.push('/cafe');
+    this.props.history.push("/cafe");
   };
 
   render() {
     const { auth } = this.props;
-//    console.log(this.props);
+    //    console.log(this.props);
     if (!auth.uid) return <Redirect to="/cafe" />;
 
     return (
@@ -36,7 +36,12 @@ class CreateCafe extends Component {
         <form onSubmit={this.handleSubmit} className=" col s12 white">
           <div className="input-field row col s12">
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" className="validate" onChange={this.handleChange}/>
+            <input
+              type="text"
+              id="name"
+              className="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field row col s12">
@@ -47,12 +52,22 @@ class CreateCafe extends Component {
           <div className="row">
             <div className="input-field col s6">
               <label htmlFor="quantity">City</label>
-              <input type="text" id="city" className="validate" onChange={this.handleChange} />
+              <input
+                type="text"
+                id="city"
+                className="validate"
+                onChange={this.handleChange}
+              />
             </div>
 
             <div className="input-field col s3">
               <label htmlFor="quantity">State</label>
-              <input type="text" id="state" className="validate" onChange={this.handleChange} />
+              <input
+                type="text"
+                id="state"
+                className="validate"
+                onChange={this.handleChange}
+              />
             </div>
 
             <div className="input-field col s3">
@@ -63,7 +78,12 @@ class CreateCafe extends Component {
 
           <div className="input-field row col s12">
             <label htmlFor="quantity">Phone Number (xxx-xxx-xxxx)</label>
-            <input type="tel" id="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" onChange={this.handleChange} />
+            <input
+              type="tel"
+              id="phoneNumber"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">
@@ -76,7 +96,7 @@ class CreateCafe extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  //console.log(state);
   return {
     auth: state.firebase.auth,
   };
