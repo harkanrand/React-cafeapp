@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
-import Details from "../utils/Details";
+import EditableDetails from "../utils/EditableDetails";
 import { updateSupplier } from "../../store/actions/supplierActions";
+import moment from "moment";
 
 class SupplierDetails extends React.Component {
   state = {
@@ -22,34 +23,10 @@ class SupplierDetails extends React.Component {
   };
 
   updateSupplier() {
-    const {
-      name,
-      city,
-      description,
-      state,
-      address,
-      contact,
-      email,
-      zip,
-      phoneNumber,
-      nickName,
-      edit,
-    } = this.state;
     const { supplierId } = this.props;
 
-    if (edit)
-      this.props.updateSupplier(supplierId, {
-        name,
-        city,
-        description,
-        state,
-        address,
-        contact,
-        email,
-        zip,
-        phoneNumber,
-        nickName,
-      });
+    if (this.state.edit)
+      this.props.updateSupplier(supplierId, { ...this.state });
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
@@ -115,11 +92,14 @@ class SupplierDetails extends React.Component {
       return (
         <div className="container section project-details">
           <div className="card z-depth-0">
-            <Details
+            <EditableDetails
               items={items}
               setState={this.setState.bind(this)}
               action={this.updateSupplier.bind(this)}
               edit={this.state.edit}
+              renderExtra={() => (
+                <div> {moment(supplier.dateCreated.toDate()).calendar()}</div>
+              )}
             />
           </div>
         </div>

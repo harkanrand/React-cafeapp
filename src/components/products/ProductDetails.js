@@ -1,48 +1,105 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect } from 'react-router-dom';
-import moment from 'moment';
+import React from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
+import moment from "moment";
+import EditableDetails from "../utils/EditableDetails";
+import { updateProduct } from "../../store/actions/productActions";
 
-export const ProductDetails = (props) => {
-  //const id = props.match.params.id;
-  const { product, auth } = props;
-  //  let priceBlock = '';
+class ProductDetails extends React.Component {
+  state = {
+    edit: false,
+    quantity: this.props.product?.quantity,
+    name: this.props.product?.name,
+    price: this.props.product?.price,
+    description: this.props.product?.description,
+    brand: this.props.product?.brand,
+    sku: this.props.product?.sku,
+    priceHistory: this.props.product?.priceHistory,
+  };
 
-  if (!auth.uid) return <Redirect to="/signin" />;
+  updateProduct() {
+    const { productId } = this.props;
 
-  if (product) {
-    /*    if (product.price != null) {
-      priceBlock = <p>price: {product.price}</p>;
-    } else {
-      priceBlock = <p>price: --</p>;
-    }
-*/
-    return (
-      <div className="container section project-details">
-        <div className="card z-depth-0">
-          <div className="card-content">
-            <span className="card-title">{product.name}</span>
-            <p>{product.brand}</p>
-            {product.price ? <p>price: {product.price}</p> : <p>price: --</p>}
-            <p>quantity: {product.quantity}</p>
-          </div>
+    if (this.state.edit) this.props.updateProduct(productId, { ...this.state });
+    this.setState((prev) => ({ edit: !prev.edit }));
+  }
 
-          <div className="card-action white ligthen-4 grey-text">
-            <p>SKU: {product.sku}</p>
-            {moment(product.dateCreated.toDate()).calendar()}
+  render() {
+    const { product, auth } = this.props;
+
+    const items = [
+      {
+        key: "name",
+        label: "Name",
+        value: this.state.name,
+      },
+      {
+        key: "description",
+        label: "Description",
+        value: this.state.description,
+      },
+      {
+        key: "quantity",
+        label: "Quantity",
+        value: this.state.quantity,
+      },
+      {
+        key: "name",
+        label: "Name",
+        value: this.state.name,
+      },
+      {
+        key: "price",
+        label: "Price",
+        value: this.state.price,
+      },
+      {
+        key: "brand",
+        label: "Brand",
+        value: this.state.brand,
+      },
+      {
+        key: "sku",
+        label: "Sku",
+        value: this.state.sku,
+      },
+    ];
+
+    if (!auth.uid) return <Redirect to="/signin" />;
+
+    if (product) {
+      return (
+        <div className="container section project-details">
+          <div className="card z-depth-0">
+            <EditableDetails
+              items={items}
+              setState={this.setState.bind(this)}
+              action={this.updateProduct.bind(this)}
+              edit={this.state.edit}
+              renderExtra={() => (
+                <div> {moment(product.dateCreated.toDate()).calendar()}</div>
+              )}
+            />
           </div>
         </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container center">
-        <p>Loading product...</p>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="container center">
+          <p>Loading product...</p>
+        </div>
+      );
+    }
   }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateProduct: (productId, product) =>
+      dispatch(updateProduct(productId, product)),
+  };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -52,13 +109,14 @@ const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   const products = state.firestore.data.products;
   const product = products ? products[id] : null;
-  console.log('product: ', product);
+  console.log("product: ", product);
   return {
     product: product,
+    productId: id,
     auth: state.firebase.auth,
   };
 };
 export default compose(
-  connect(mapStateToProps),
-  firestoreConnect([{ collection: 'products' }])
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "products" }])
 )(ProductDetails);

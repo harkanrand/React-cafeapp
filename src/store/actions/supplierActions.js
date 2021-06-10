@@ -26,6 +26,8 @@ export const updateSupplier = (supplierId, supplier) => {
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
 
+    delete supplier.edit;
+
     firestore
       .collection("suppliers")
       .doc(supplierId)

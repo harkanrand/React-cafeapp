@@ -4,8 +4,8 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import { updateItem } from "../../store/actions/itemActions";
-import Details from "../utils/Details";
-
+import EditableDetails from "../utils/EditableDetails";
+import moment from "moment";
 class ItemDetails extends React.Component {
   state = {
     edit: false,
@@ -50,7 +50,7 @@ class ItemDetails extends React.Component {
 
     if (inventoryItem) {
       return (
-        <Details
+        <EditableDetails
           items={items}
           setState={this.setState.bind(this)}
           updateItem={this.updateItem.bind(this)}
@@ -104,6 +104,7 @@ class ItemDetails extends React.Component {
                   {this.state.category}
                 </p>
               )}
+              {moment(inventoryItem.dateCreated.toDate()).calendar()}
             </div>
           )}
         />
