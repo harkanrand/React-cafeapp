@@ -46,11 +46,6 @@ class ProductDetails extends React.Component {
         value: this.state.quantity,
       },
       {
-        key: "name",
-        label: "Name",
-        value: this.state.name,
-      },
-      {
         key: "price",
         label: "Price",
         value: this.state.price,

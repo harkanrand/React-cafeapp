@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import ProductSummary from './ProductSummary';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from "react";
+import ProductSummary from "./ProductSummary";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 class ProductList extends Component {
   render() {
     const { products, auth } = this.props;
-    console.log(this.props);
+    console.log("wjod", this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
     return (
@@ -20,7 +20,7 @@ class ProductList extends Component {
             {products &&
               products.map((product) => {
                 return (
-                  <Link to={'/product/' + product.id} key={product.id}>
+                  <Link to={"/product/" + product.id} key={product.id}>
                     <ProductSummary product={product} />
                   </Link>
                 );
@@ -49,5 +49,5 @@ const mapStateToProps = (state) => {
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([{ collection: 'products' }])
+  firestoreConnect([{ collection: "products" }])
 )(ProductList);
