@@ -10,50 +10,58 @@ class ItemDetails extends React.Component {
   state = {
     edit: false,
     showCategories: false,
-    name: this.props.inventoryItem?.name,
-    par: this.props.inventoryItem?.par,
-    description: this.props.inventoryItem?.description,
+    items: {
+      name: {
+        value: this.props.inventoryItem?.name,
+        label: "Name",
+      },
+      par: {
+        value: this.props.inventoryItem?.par,
+        label: "Par amount",
+      },
+      description: {
+        value: this.props.inventoryItem?.description,
+        label: "Description",
+      },
+    },
     category: this.props.inventoryItem?.category,
   };
 
   updateItem() {
-    const { name, par, description, category, edit } = this.state;
+    const { items, edit, category } = this.state;
     const { itemId } = this.props;
 
-    if (edit)
-      this.props.updateItem(itemId, { name, par, description, category });
+    let item = {};
+    Object.entries(items).forEach(([key, { value }]) => {
+      item = { ...item, [key]: value };
+    });
+
+    if (edit) {
+      this.props.updateItem(itemId, { ...item, category });
+      console.log("go", { item });
+    }
     this.setState((prev) => ({ edit: !prev.edit }));
+  }
+
+  changeValue(key, value) {
+    const { items } = this.state;
+    items[key].value = value;
+
+    this.setState({ items });
   }
 
   render() {
     //const id = props.match.params.id;
     const { inventoryItem, auth, categories } = this.props;
+    const { items } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
-
-    const items = [
-      {
-        key: "name",
-        value: this.state.name,
-        label: "Name",
-      },
-      {
-        key: "par",
-        value: this.state.par,
-        label: "Par amount",
-      },
-      {
-        key: "description",
-        value: this.state.description,
-        label: "Description",
-      },
-    ];
 
     if (inventoryItem) {
       return (
         <EditableDetails
           items={items}
-          setState={this.setState.bind(this)}
-          updateItem={this.updateItem.bind(this)}
+          changeValue={this.changeValue.bind(this)}
+          action={this.updateItem.bind(this)}
           edit={this.state.edit}
           renderExtra={() => (
             <div>

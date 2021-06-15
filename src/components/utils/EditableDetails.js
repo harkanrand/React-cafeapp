@@ -18,28 +18,31 @@ class Details extends React.Component {
           </div>
 
           <div className="card-action white ligthen-4 grey-text">
-            {items.map(({ key, value, label }, i) => (
-              <div key={i}>
-                {edit ? (
-                  <>
-                    <label htmlFor={key}>{label}</label>
-                    <input
-                      id={key}
-                      type="text"
-                      value={value}
-                      onChange={(e) =>
-                        this.props.setState({ [key]: e.target.value })
-                      }
-                    />
-                  </>
-                ) : (
-                  <p>
-                    {label}: <br />
-                    {value}
-                  </p>
-                )}
-              </div>
-            ))}
+            {Object.entries(items).map(([key, { value, label }], i) => {
+              console.log(key, value, label);
+              return (
+                <div key={i}>
+                  {edit ? (
+                    <>
+                      <label htmlFor={key}>{label}</label>
+                      <input
+                        id={key}
+                        type="text"
+                        value={value}
+                        onChange={(e) =>
+                          this.props.changeValue(key, e.target.value)
+                        }
+                      />
+                    </>
+                  ) : (
+                    <p>
+                      {label}: <br />
+                      {value}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
             {this.props.renderExtra?.()}
           </div>
         </div>
