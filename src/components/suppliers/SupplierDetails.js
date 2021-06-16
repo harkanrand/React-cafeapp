@@ -10,81 +10,75 @@ import moment from "moment";
 class SupplierDetails extends React.Component {
   state = {
     edit: false,
-    name: this.props.supplier?.name,
-    city: this.props.supplier?.city,
-    description: this.props.supplier?.description,
-    address: this.props.supplier?.address,
-    contact: this.props.supplier?.contact,
-    email: this.props.supplier?.email,
-    zip: this.props.supplier?.zip,
-    phoneNumber: this.props.supplier?.phoneNumber,
-    state: this.props.supplier?.state,
-    nickName: this.props.supplier?.nickName,
+    items: {
+      name: {
+        value: this.props.supplier?.name,
+        label: "Name",
+      },
+      city: {
+        value: this.props.supplier?.city,
+        label: "City",
+      },
+      description: {
+        value: this.props.supplier?.description,
+        label: "Description",
+      },
+      address: {
+        value: this.props.supplier?.address,
+        label: "Address",
+      },
+      contact: {
+        value: this.props.supplier?.contact,
+        label: "Contact",
+      },
+      email: {
+        value: this.props.supplier?.email,
+        label: "Email",
+      },
+      phoneNumber: {
+        value: this.props.supplier?.phoneNumber,
+        label: "Phone number",
+      },
+      zip: {
+        value: this.props.supplier?.zip,
+        label: "Zip",
+      },
+      state: {
+        value: this.props.supplier?.state,
+        label: "State",
+      },
+      nickName: {
+        value: this.props.supplier?.nickName,
+        label: "Nickname",
+      },
+    },
   };
+
+  changeValue(key, value) {
+    const { items } = this.state;
+    items[key].value = value;
+
+    this.setState({ items });
+  }
 
   updateSupplier() {
     const { supplierId } = this.props;
 
+    let item = {};
+    Object.entries(this.state.items).forEach(([key, { value }]) => {
+      item = { ...item, [key]: value };
+    });
+
     if (this.state.edit)
-      this.props.updateSupplier(supplierId, { ...this.state });
+      this.props.updateSupplier(supplierId, {
+        ...item,
+      });
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
   render() {
     const { auth, supplier } = this.props;
-
-    const items = [
-      {
-        key: "name",
-        value: this.state.name,
-        label: "Name",
-      },
-      {
-        key: "city",
-        value: this.state.city,
-        label: "City",
-      },
-      {
-        key: "description",
-        value: this.state.description,
-        label: "Description",
-      },
-      {
-        key: "address",
-        value: this.state.address,
-        label: "Address",
-      },
-      {
-        key: "contact",
-        value: this.state.contact,
-        label: "Contact",
-      },
-      {
-        key: "email",
-        value: this.state.email,
-        label: "Email",
-      },
-      {
-        key: "phoneNumber",
-        value: this.state.phoneNumber,
-        label: "Phone number",
-      },
-      {
-        key: "zip",
-        value: this.state.zip,
-        label: "Zip",
-      },
-      {
-        key: "state",
-        value: this.state.state,
-        label: "State",
-      },
-      {
-        key: "nickName",
-        value: this.state.nickName,
-        label: "Nickname",
-      },
-    ];
+    const { items } = this.state;
 
     if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -94,7 +88,7 @@ class SupplierDetails extends React.Component {
           <div className="card z-depth-0">
             <EditableDetails
               items={items}
-              setState={this.setState.bind(this)}
+              changeValue={this.changeValue.bind(this)}
               action={this.updateSupplier.bind(this)}
               edit={this.state.edit}
               renderExtra={() => (

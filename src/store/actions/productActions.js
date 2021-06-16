@@ -44,8 +44,6 @@ export const updateProduct = (productId, product) => {
       },
     ];
 
-    delete product.edit;
-
     firestore
       .collection("products")
       .doc(productId)

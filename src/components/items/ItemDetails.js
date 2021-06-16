@@ -28,18 +28,15 @@ class ItemDetails extends React.Component {
   };
 
   updateItem() {
-    const { items, edit, category } = this.state;
     const { itemId } = this.props;
 
     let item = {};
-    Object.entries(items).forEach(([key, { value }]) => {
+    Object.entries(this.state.items).forEach(([key, { value }]) => {
       item = { ...item, [key]: value };
     });
 
-    if (edit) {
-      this.props.updateItem(itemId, { ...item, category });
-      console.log("go", { item });
-    }
+    if (this.state.edit)
+      this.props.updateItem(itemId, { ...item, category: this.state.category });
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 

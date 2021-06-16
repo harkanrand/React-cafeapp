@@ -10,58 +10,60 @@ import { updateProduct } from "../../store/actions/productActions";
 class ProductDetails extends React.Component {
   state = {
     edit: false,
-    quantity: this.props.product?.quantity,
-    name: this.props.product?.name,
-    price: this.props.product?.price,
-    description: this.props.product?.description,
-    brand: this.props.product?.brand,
-    sku: this.props.product?.sku,
-    priceHistory: this.props.product?.priceHistory,
+    items: {
+      name: {
+        label: "Name",
+        value: this.props.product?.name,
+      },
+      description: {
+        label: "Description",
+        value: this.props.product?.description,
+      },
+      quantity: {
+        label: "Quantity",
+        value: this.props.product?.quantity,
+      },
+      price: {
+        label: "Price",
+        value: this.props.product?.price,
+      },
+      brand: {
+        label: "Brand",
+        value: this.props.product?.brand,
+      },
+      sku: {
+        label: "Sku",
+        value: this.props.product?.sku,
+      },
+    },
   };
 
-  updateProduct() {
-    const { productId } = this.props;
+  changeValue(key, value) {
+    const { items } = this.state;
+    items[key].value = value;
 
-    if (this.state.edit) this.props.updateProduct(productId, { ...this.state });
+    this.setState({ items });
+  }
+
+  updateProduct() {
+    const { productId, product } = this.props;
+
+    let item = {};
+    Object.entries(this.state.items).forEach(([key, { value }]) => {
+      item = { ...item, [key]: value };
+    });
+
+    if (this.state.edit)
+      this.props.updateProduct(productId, {
+        ...item,
+        priceHistory: product?.priceHistory,
+      });
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
   render() {
     const { product, auth } = this.props;
-
-    const items = [
-      {
-        key: "name",
-        label: "Name",
-        value: this.state.name,
-      },
-      {
-        key: "description",
-        label: "Description",
-        value: this.state.description,
-      },
-      {
-        key: "quantity",
-        label: "Quantity",
-        value: this.state.quantity,
-      },
-      {
-        key: "price",
-        label: "Price",
-        value: this.state.price,
-      },
-      {
-        key: "brand",
-        label: "Brand",
-        value: this.state.brand,
-      },
-      {
-        key: "sku",
-        label: "Sku",
-        value: this.state.sku,
-      },
-    ];
-
+    const { items } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (product) {
@@ -70,7 +72,7 @@ class ProductDetails extends React.Component {
           <div className="card z-depth-0">
             <EditableDetails
               items={items}
-              setState={this.setState.bind(this)}
+              changeValue={this.changeValue.bind(this)}
               action={this.updateProduct.bind(this)}
               edit={this.state.edit}
               renderExtra={() => (

@@ -10,7 +10,6 @@ import { NavLink } from "react-router-dom";
 class ProductList extends Component {
   render() {
     const { products, auth } = this.props;
-    console.log("wjod", this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
     return (
