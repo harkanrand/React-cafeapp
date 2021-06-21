@@ -10,7 +10,6 @@ import { NavLink } from "react-router-dom";
 
 export const CafeDashboard = (props) => {
   const { profile, auth } = props;
-  console.log("props: ", props);
 
   if (!auth.uid) return <Redirect to="/signin" />;
 

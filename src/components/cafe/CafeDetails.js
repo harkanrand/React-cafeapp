@@ -8,7 +8,6 @@ import { Redirect } from "react-router-dom";
 
 export const CafeDetails = (props) => {
   const { profile, auth } = props;
-  console.log("props: ", props);
 
   if (!auth.uid) return <Redirect to="/signin" />;
 
@@ -94,8 +93,6 @@ export const CafeDetails = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state);
-
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,

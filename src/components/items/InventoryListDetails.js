@@ -48,7 +48,7 @@ class InventoryListDetails extends React.Component {
                       className="dropdown-trigger btn"
                       onClick={() => this.setState({ show: true })}
                     >
-                      {category ? category : "All categories"}
+                      {category ? category : "All"}
                     </a>
 
                     <ul
@@ -64,7 +64,7 @@ class InventoryListDetails extends React.Component {
                                 this.setState({ category: name, show: false })
                               }
                             >
-                              {!name ? "All categories" : name}
+                              {!name ? "All" : name}
                             </a>
                           </li>
                         );

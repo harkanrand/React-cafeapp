@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect, NavLink, Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect, NavLink, Link } from "react-router-dom";
 
 class InventoryLists extends Component {
   render() {
     const { inventoryLists, auth } = this.props;
-  //  console.log(this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (inventoryLists) {
@@ -19,7 +18,7 @@ class InventoryLists extends Component {
                 Add New Item
               </button>
             </NavLink>
-            {'  '}
+            {"  "}
             <NavLink to="/createItemList">
               <button className="waves-effect waves-light btn pink lighten-1 z-depth-0">
                 Create Inventory List
@@ -42,12 +41,20 @@ class InventoryLists extends Component {
                     return (
                       <tr key={list.id}>
                         <td>
-                          <Link to={'/inventory/' + list.id} key={list.id}>
-                            {list.name}
+                          <Link
+                            to={`/inventory/${list.id}/conduct`}
+                            key={list.id}
+                          >
+                            {`Conduct ${list.name}`}
                           </Link>
                         </td>
                         <td>{list.description}</td>
                         <td>({list.itemCount})</td>
+                        <td>
+                          <Link to={"/inventory/" + list.id} key={list.id}>
+                            {`Edit ${list.name}`}
+                          </Link>
+                        </td>
                       </tr>
                     );
                   })}
@@ -67,7 +74,7 @@ class InventoryLists extends Component {
 }
 
 const mapStateToProps = (state) => {
-//  console.log('state: ', state)
+  //  console.log('state: ', state)
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
@@ -81,14 +88,14 @@ export default compose(
     if (!props.profile.defaultCafeId) {
       return [];
     }
-        console.log('defaultCafe: ', props.profile.defaultCafeId);
+    console.log("defaultCafe: ", props.profile.defaultCafeId);
 
     return [
       {
-        collection: 'cafes',
+        collection: "cafes",
         doc: props.profile.defaultCafeId,
-        subcollections: [{ collection: 'inventoryList' }],
-        storeAs: 'inventoryLists',
+        subcollections: [{ collection: "inventoryList" }],
+        storeAs: "inventoryLists",
       },
     ];
   })
