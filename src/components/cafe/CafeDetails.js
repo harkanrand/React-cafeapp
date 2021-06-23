@@ -3,125 +3,115 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
-//import moment from 'moment';
-//import { InventorySummaryCard } from './InventorySummaryCard';
+import EditableDetails from "../utils/EditableDetails";
+import { updateCafe } from "../../store/actions/cafeActions";
+import moment from "moment";
 
-export const CafeDetails = (props) => {
-  const { profile, auth } = props;
+class CafeDetails extends React.Component {
+  state = {
+    edit: false,
+    items: {
+      name: {
+        value: this.props.cafe?.name,
+        label: "Name",
+      },
+      city: {
+        value: this.props.cafe?.address?.city,
+        label: "City",
+      },
+      address: {
+        value: this.props.cafe?.address?.address,
+        label: "Address",
+      },
+      phoneNumber: {
+        value: this.props.cafe?.phoneNumber,
+        label: "Phone number",
+      },
+      zip: {
+        value: this.props.cafe?.address?.zip,
+        label: "Zip",
+      },
+      state: {
+        value: this.props.cafe?.address?.state,
+        label: "State",
+      },
+    },
+  };
 
-  if (!auth.uid) return <Redirect to="/signin" />;
+  changeValue(key, value) {
+    const { items } = this.state;
+    items[key].value = value;
 
-  if (profile) {
-    return (
-      <div className="container section bk-title-card">
-        <div className="card z-depth-0">
-          <div className="card-content">
-            <span className="card-title">{profile.defaultCafeName}</span>
-          </div>
-          <div className="card-action white ligthen-4 grey-text">
-            <div>
-              <p>
-                {profile.defaultCafeRole}: {profile.firstName}{" "}
-                {profile.lastName}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card z-depth-0">
-          <div className="card-content">
-            <span className="card-title">Inventories to conduct</span>
-          </div>
-          <div className="card-action white ligthen-4 grey-text">
-            <div>
-              <p>Daily inventory task...</p>
-              <p>Weekly inventory task...</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card z-depth-0">
-          <div className="card-content">
-            <span className="card-title">Current Shopping List</span>
-          </div>
-          <div className="card-action white ligthen-4 dark-grey-text">
-            <div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Urgency</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>Whole Milk</td>
-                    <td>8 gallons</td>
-                    <td>high</td>
-                  </tr>
-                  <tr>
-                    <td>Fresh Mozzerella</td>
-                    <td>6</td>
-                    <td>medium</td>
-                  </tr>
-                  <tr>
-                    <td>Vanilly Syrup</td>
-                    <td>4</td>
-                    <td>low</td>
-                  </tr>
-                  <tr>
-                    <td>Pellegrino - Blood Orage</td>
-                    <td>1 case</td>
-                    <td>low</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container center">
-        <p>Loading Profile...</p>
-      </div>
-    );
+    this.setState({ items });
   }
+
+  updateCafe() {
+    const { cafeId } = this.props;
+
+    let item = {};
+    Object.entries(this.state.items).forEach(([key, { value }]) => {
+      item = { ...item, [key]: value };
+    });
+
+    if (this.state.edit)
+      this.props.updateCafe(cafeId, {
+        ...item,
+      });
+    this.setState((prev) => ({ edit: !prev.edit }));
+  }
+
+  render() {
+    const { auth, cafe } = this.props;
+    const { items } = this.state;
+
+    console.log("cafe", cafe);
+    if (!auth.uid) return <Redirect to="/signin" />;
+
+    if (cafe) {
+      return (
+        <div className="container section project-details">
+          <div className="card z-depth-0">
+            <EditableDetails
+              items={items}
+              changeValue={this.changeValue.bind(this)}
+              action={this.updateCafe.bind(this)}
+              edit={this.state.edit}
+              renderExtra={() => (
+                <div> {moment(cafe.dateCreated.toDate()).calendar()}</div>
+              )}
+            />
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="container center">
+          <p>Loading cafe...</p>
+        </div>
+      );
+    }
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateCafe: (cafeId, cafe) => dispatch(updateCafe(cafeId, cafe)),
+  };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  // Todo: We should get just the specific supplier from firestore instead of all of the supplier and then filtering it out here
+  const id = ownProps.match.params.id;
+  const cafes = state.firestore.data.cafes;
+  const cafe = cafes ? cafes[id] : null;
   return {
+    cafe,
+    cafeId: id,
     auth: state.firebase.auth,
-    profile: state.firebase.profile,
-    users: state.firestore.ordered.users,
-    inventoryItem: state.firestore.data.inventoryItems,
-    //   inventoryItems: inventoryItems,
   };
 };
 
 export default compose(
-  connect(mapStateToProps),
-  firestoreConnect([{ collection: "users" }]),
-  firestoreConnect((props, ownProps) => {
-    //    console.log('defaultCafe: ', props.profile.defaultCafe);
-    //    console.log('ownProps: ', ownProps.match.params.id);
-
-    if (!props.profile.defaultCafe) {
-      return [];
-    }
-
-    return [
-      {
-        collection: "cafes",
-        doc: props.profile.defaultCafe,
-        subcollections: [
-          { collection: "inventoryItems", doc: ownProps.match.params.id },
-        ],
-        storeAs: "inventoryItems",
-      },
-    ];
-  })
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "cafes" }])
 )(CafeDetails);

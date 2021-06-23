@@ -115,8 +115,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 const mapStateToProps = (state, ownProps) => {
-  //console.log(state);
-
   // Todo: We should get just the specific supplier from firestore instead of all of the supplier and then filtering it out here
   const id = ownProps.match.params.id;
   const suppliers = state.firestore.data.suppliers;

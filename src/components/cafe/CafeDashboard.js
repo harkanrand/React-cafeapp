@@ -2,9 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
-import { Redirect } from "react-router-dom";
-
-import { NavLink } from "react-router-dom";
+import { Redirect, NavLink, Link } from "react-router-dom";
 //import moment from 'moment';
 //import { InventorySummaryCard } from './InventorySummaryCard';
 
@@ -18,8 +16,13 @@ export const CafeDashboard = (props) => {
       return (
         <div className="container section bk-title-card">
           <div className="card z-depth-0">
-            <div className="card-content">
-              <span className="card-title">{profile.defaultCafeName}</span>
+            <div className="card-content row">
+              <span className="col s11 card-title">
+                {profile.defaultCafeName}
+              </span>
+              <Link className="col s1" to={`/cafe/${profile.defaultCafeId}`}>
+                View
+              </Link>
             </div>
             <div className="card-action white ligthen-4 grey-text">
               <div>

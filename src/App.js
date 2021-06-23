@@ -32,7 +32,7 @@ import UserList from "./components/users/UserList";
 import UserDetails from "./components/users/UserDetails";
 
 import CafeTest from "./components/test/cafeTest";
-import { CafeDetails } from "./components/cafe/CafeDetails";
+import CafeDetails from "./components/cafe/CafeDetails";
 
 class App extends Component {
   render() {
@@ -68,7 +68,7 @@ class App extends Component {
 
             <Route path="/createCafe" component={CreateCafe} />
             <Route path="/cafeList" component={CafeList} />
-            <Route path="/cafe" component={CafeDashboard} />
+            <Route exact path="/cafe" component={CafeDashboard} />
             <Route path="/cafe/:id" component={CafeDetails} />
 
             <Route path="/userlist" component={UserList} />
