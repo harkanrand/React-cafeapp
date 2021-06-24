@@ -119,7 +119,6 @@ const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   const suppliers = state.firestore.data.suppliers;
   const supplier = suppliers ? suppliers[id] : null;
-  console.log("supplier: ", supplier);
   return {
     supplier: supplier,
     supplierId: id,

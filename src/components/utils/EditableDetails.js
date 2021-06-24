@@ -19,7 +19,6 @@ class Details extends React.Component {
 
           <div className="card-action white ligthen-4 grey-text">
             {Object.entries(items).map(([key, { value, label }], i) => {
-              console.log(key, value, label);
               return (
                 <div key={i}>
                   {edit ? (

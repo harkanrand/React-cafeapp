@@ -8,24 +8,34 @@ import EditableDetails from "../utils/EditableDetails";
 import moment from "moment";
 class ItemDetails extends React.Component {
   state = {
+    set: false,
     edit: false,
     showCategories: false,
-    items: {
-      name: {
-        value: this.props.inventoryItem?.name,
-        label: "Name",
-      },
-      par: {
-        value: this.props.inventoryItem?.par,
-        label: "Par amount",
-      },
-      description: {
-        value: this.props.inventoryItem?.description,
-        label: "Description",
-      },
-    },
-    category: this.props.inventoryItem?.category,
   };
+
+  componentDidUpdate() {
+    const { inventoryItem } = this.props;
+    if (!this.state.set && inventoryItem && inventoryItem.name) {
+      this.setState({
+        set: true,
+        category: this.props.inventoryItem?.category,
+        items: {
+          name: {
+            value: this.props.inventoryItem?.name,
+            label: "Name",
+          },
+          par: {
+            value: this.props.inventoryItem?.par,
+            label: "Par amount",
+          },
+          description: {
+            value: this.props.inventoryItem?.description,
+            label: "Description",
+          },
+        },
+      });
+    }
+  }
 
   updateItem() {
     const { itemId } = this.props;
@@ -53,7 +63,7 @@ class ItemDetails extends React.Component {
     const { items } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (inventoryItem) {
+    if (items) {
       return (
         <EditableDetails
           items={items}
@@ -127,13 +137,11 @@ class ItemDetails extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   // Todo: We should get just the specific item from firestore instead of all of the items and then filtering it out here
   const id = ownProps.match.params.id;
-  const inventoryItems = state.firestore.data.inventoryItems;
-  const inventoryItem = inventoryItems ? inventoryItems[id] : null;
 
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
-    inventoryItem: inventoryItem,
+    inventoryItem: state.firestore.data.inventoryItem,
     itemId: id,
     categories: state.item.categories,
   };
@@ -148,12 +156,11 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect((props, ownProps) => {
-    console.log("defaultCafe: ", props.profile.defaultCafeId);
-    console.log("ownProps: ", ownProps.match.params.id);
-
     if (!props.profile.defaultCafeId) {
       return [];
     }
+    console.log("defaultCafe: ", props.profile.defaultCafeId);
+    console.log("ownProps: ", ownProps.match.params.id);
 
     return [
       {

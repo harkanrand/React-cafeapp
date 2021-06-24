@@ -10,33 +10,43 @@ import { updateProduct } from "../../store/actions/productActions";
 class ProductDetails extends React.Component {
   state = {
     edit: false,
-    items: {
-      name: {
-        label: "Name",
-        value: this.props.product?.name,
-      },
-      description: {
-        label: "Description",
-        value: this.props.product?.description,
-      },
-      quantity: {
-        label: "Quantity",
-        value: this.props.product?.quantity,
-      },
-      price: {
-        label: "Price",
-        value: this.props.product?.price,
-      },
-      brand: {
-        label: "Brand",
-        value: this.props.product?.brand,
-      },
-      sku: {
-        label: "Sku",
-        value: this.props.product?.sku,
-      },
-    },
+    set: false,
   };
+
+  componentDidUpdate() {
+    const { product } = this.props;
+    if (!this.state.set && product && product.name) {
+      this.setState({
+        set: true,
+        items: {
+          name: {
+            label: "Name",
+            value: this.props.product?.name,
+          },
+          description: {
+            label: "Description",
+            value: this.props.product?.description,
+          },
+          quantity: {
+            label: "Quantity",
+            value: this.props.product?.quantity,
+          },
+          price: {
+            label: "Price",
+            value: this.props.product?.price,
+          },
+          brand: {
+            label: "Brand",
+            value: this.props.product?.brand,
+          },
+          sku: {
+            label: "Sku",
+            value: this.props.product?.sku,
+          },
+        },
+      });
+    }
+  }
 
   changeValue(key, value) {
     const { items } = this.state;
@@ -66,7 +76,7 @@ class ProductDetails extends React.Component {
     const { items } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (product) {
+    if (items) {
       return (
         <div className="container section project-details">
           <div className="card z-depth-0">
@@ -100,15 +110,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  //console.log(state);
-
-  // Todo: We should get just the specific product from firestore instead of all of the product and then filtering it out here
   const id = ownProps.match.params.id;
   const products = state.firestore.data.products;
   const product = products ? products[id] : null;
-  console.log("product: ", product);
   return {
-    product: product,
+    product,
     productId: id,
     auth: state.firebase.auth,
   };

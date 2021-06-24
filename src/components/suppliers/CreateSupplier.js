@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import createSupplier from '../../store/actions/supplierActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import createSupplier from "../../store/actions/supplierActions";
+import { Redirect } from "react-router-dom";
 
 class CreateSupplier extends Component {
   state = {
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    phoneNumber: '',
-    contact: '',
-    email: '',
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    phoneNumber: "",
+    contact: "",
+    email: "",
   };
 
   handleChange = (e) => {
@@ -22,7 +22,7 @@ class CreateSupplier extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.createSupplier(this.state);
-    this.props.history.push('/suppliers');
+    this.props.history.push("/suppliers");
   };
 
   render() {
@@ -36,7 +36,12 @@ class CreateSupplier extends Component {
 
           <div className="input-field col s12">
             <label htmlFor="name">Business Name</label>
-            <input type="text" id="name" className="validate" onChange={this.handleChange} />
+            <input
+              type="text"
+              id="name"
+              className="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field col s12">
@@ -57,12 +62,22 @@ class CreateSupplier extends Component {
           <div className="row">
             <div className="input-field col s6">
               <label htmlFor="quantity">City</label>
-              <input type="text" id="city" className="validate" onChange={this.handleChange} />
+              <input
+                type="text"
+                id="city"
+                className="validate"
+                onChange={this.handleChange}
+              />
             </div>
 
             <div className="input-field col s3">
               <label htmlFor="quantity">State</label>
-              <input type="text" id="state" className="validate" onChange={this.handleChange} />
+              <input
+                type="text"
+                id="state"
+                className="validate"
+                onChange={this.handleChange}
+              />
             </div>
 
             <div className="input-field col s3">
@@ -73,7 +88,12 @@ class CreateSupplier extends Component {
 
           <div className="input-field row col s12">
             <label htmlFor="quantity">Phone Number (xxx-xxx-xxxx)</label>
-            <input type="tel" id="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" onChange={this.handleChange} />
+            <input
+              type="tel"
+              id="phoneNumber"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field row col s12">
@@ -86,7 +106,6 @@ class CreateSupplier extends Component {
             <input type="email" id="email" onChange={this.handleChange} />
           </div>
 
-
           <div className="input-field">
             <button className="btn pink lighten-1 z-depth-0">Create</button>
           </div>
@@ -97,7 +116,6 @@ class CreateSupplier extends Component {
 }
 
 const mapStateToProps = (state) => {
-  // console.log(state);
   return {
     auth: state.firebase.auth,
   };
