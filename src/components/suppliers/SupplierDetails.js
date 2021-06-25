@@ -10,49 +10,59 @@ import moment from "moment";
 class SupplierDetails extends React.Component {
   state = {
     edit: false,
-    items: {
-      name: {
-        value: this.props.supplier?.name,
-        label: "Name",
-      },
-      city: {
-        value: this.props.supplier?.city,
-        label: "City",
-      },
-      description: {
-        value: this.props.supplier?.description,
-        label: "Description",
-      },
-      address: {
-        value: this.props.supplier?.address,
-        label: "Address",
-      },
-      contact: {
-        value: this.props.supplier?.contact,
-        label: "Contact",
-      },
-      email: {
-        value: this.props.supplier?.email,
-        label: "Email",
-      },
-      phoneNumber: {
-        value: this.props.supplier?.phoneNumber,
-        label: "Phone number",
-      },
-      zip: {
-        value: this.props.supplier?.zip,
-        label: "Zip",
-      },
-      state: {
-        value: this.props.supplier?.state,
-        label: "State",
-      },
-      nickName: {
-        value: this.props.supplier?.nickName,
-        label: "Nickname",
-      },
-    },
+    set: false,
   };
+
+  componentDidUpdate() {
+    const { supplier } = this.props;
+    if (!this.state.set && supplier && supplier.name) {
+      this.setState({
+        set: true,
+        items: {
+          name: {
+            value: this.props.supplier?.name,
+            label: "Name",
+          },
+          city: {
+            value: this.props.supplier?.city,
+            label: "City",
+          },
+          description: {
+            value: this.props.supplier?.description,
+            label: "Description",
+          },
+          address: {
+            value: this.props.supplier?.address,
+            label: "Address",
+          },
+          contact: {
+            value: this.props.supplier?.contact,
+            label: "Contact",
+          },
+          email: {
+            value: this.props.supplier?.email,
+            label: "Email",
+          },
+          phoneNumber: {
+            value: this.props.supplier?.phoneNumber,
+            label: "Phone number",
+          },
+          zip: {
+            value: this.props.supplier?.zip,
+            label: "Zip",
+          },
+          state: {
+            value: this.props.supplier?.state,
+            label: "State",
+          },
+          nickName: {
+            value: this.props.supplier?.nickName,
+            label: "Nickname",
+          },
+        },
+      });
+    }
+  }
 
   changeValue(key, value) {
     const { items } = this.state;
@@ -82,7 +92,7 @@ class SupplierDetails extends React.Component {
 
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (supplier) {
+    if (items) {
       return (
         <div className="container section project-details">
           <div className="card z-depth-0">
@@ -120,7 +130,7 @@ const mapStateToProps = (state, ownProps) => {
   const suppliers = state.firestore.data.suppliers;
   const supplier = suppliers ? suppliers[id] : null;
   return {
-    supplier: supplier,
+    supplier,
     supplierId: id,
     auth: state.firebase.auth,
   };

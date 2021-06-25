@@ -10,33 +10,43 @@ import moment from "moment";
 class CafeDetails extends React.Component {
   state = {
     edit: false,
-    items: {
-      name: {
-        value: this.props.cafe?.name,
-        label: "Name",
-      },
-      city: {
-        value: this.props.cafe?.address?.city,
-        label: "City",
-      },
-      address: {
-        value: this.props.cafe?.address?.address,
-        label: "Address",
-      },
-      phoneNumber: {
-        value: this.props.cafe?.phoneNumber,
-        label: "Phone number",
-      },
-      zip: {
-        value: this.props.cafe?.address?.zip,
-        label: "Zip",
-      },
-      state: {
-        value: this.props.cafe?.address?.state,
-        label: "State",
-      },
-    },
+    set: false,
   };
+
+  componentDidUpdate() {
+    const { cafe } = this.props;
+    if (!this.state.set && cafe && cafe.name) {
+      this.setState({
+        set: true,
+        items: {
+          name: {
+            value: this.props.cafe?.name,
+            label: "Name",
+          },
+          city: {
+            value: this.props.cafe?.address?.city,
+            label: "City",
+          },
+          address: {
+            value: this.props.cafe?.address?.address,
+            label: "Address",
+          },
+          phoneNumber: {
+            value: this.props.cafe?.phoneNumber,
+            label: "Phone number",
+          },
+          zip: {
+            value: this.props.cafe?.address?.zip,
+            label: "Zip",
+          },
+          state: {
+            value: this.props.cafe?.address?.state,
+            label: "State",
+          },
+        },
+      });
+    }
+  }
 
   changeValue(key, value) {
     const { items } = this.state;
@@ -67,7 +77,7 @@ class CafeDetails extends React.Component {
     console.log("cafe", cafe);
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    if (cafe) {
+    if (items) {
       return (
         <div className="container section project-details">
           <div className="card z-depth-0">
