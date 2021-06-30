@@ -11,23 +11,31 @@ class InventoryListDetails extends React.Component {
     search: "",
     category: "",
     show: false,
+    fetched: false,
   };
 
+  componentDidUpdate() {
+    const { inventoryList } = this.props;
+    if (
+      (!this.state.fetched && inventoryList) ||
+      this.state.inventoryList?.items?.length !== inventoryList?.items?.length
+    ) {
+      this.setState({
+        fetched: true,
+        inventoryList,
+      });
+    }
+  }
+
   render() {
-    const { search, category, show } = this.state;
+    const { search, category, show, inventoryList, fetched } = this.state;
     //const id = props.match.params.id;
-    const {
-      inventoryList,
-      inventoryItems,
-      auth,
-      location,
-      categories,
-    } = this.props;
+    const { inventoryItems, auth, location, categories } = this.props;
     const listId = location.pathname.split("/")[2];
 
     if (!auth.uid) return <Redirect to="/signin" />;
     // console.log('props: ', props);
-    if (inventoryList) {
+    if (fetched) {
       //   if (inventoryItems) {
       return (
         <div>
@@ -101,7 +109,7 @@ class InventoryListDetails extends React.Component {
                             </Link>
                             <a
                               onClick={() => {
-                                this.props.addItemToList(listId, item.id);
+                                this.props.addItemToList(listId, item);
                               }}
                               style={{ cursor: "pointer" }}
                             >
@@ -137,24 +145,17 @@ class InventoryListDetails extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {inventoryList?.items?.map((itemId, i) => {
-                        const item = inventoryItems?.find(
-                          (item) => item.id === itemId
-                        );
-                        return item ? (
-                          <tr key={i}>
-                            <td>{item.par}</td>
-                            <td>
-                              <Link to={"/item/" + item.id} key={item.id}>
-                                {item.name}
-                              </Link>
-                            </td>
-                            <td>{item.urgency}</td>
-                          </tr>
-                        ) : (
-                          <tr key={i} />
-                        );
-                      })}
+                      {inventoryList?.items?.map((item, i) => (
+                        <tr key={i}>
+                          <td>{item.par}</td>
+                          <td>
+                            <Link to={"/item/" + item.id} key={item.id}>
+                              {item.name}
+                            </Link>
+                          </td>
+                          <td>{item.urgency}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -195,8 +196,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
-    inventoryList: inventoryList,
-    inventoryItems: inventoryItems,
+    inventoryList,
+    inventoryItems,
     categories: state.item.categories,
   };
 };

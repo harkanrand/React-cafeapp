@@ -77,7 +77,7 @@ export const addItem = (item) => {
   };
 };
 
-export const addItemToList = (listId, itemId) => {
+export const addItemToList = (listId, item) => {
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database
     const firestore = getFirebase().firestore();
@@ -85,14 +85,13 @@ export const addItemToList = (listId, itemId) => {
     const profile = getState().firebase.profile;
 
     const items = inventoryLists[listId]?.items;
-
     firestore
       .collection("cafes")
       .doc(profile.defaultCafeId)
       .collection("inventoryList")
       .doc(listId)
       .update({
-        items: [...items, itemId],
+        items: [...items, item],
         dateUpdated: new Date(),
         itemCount: items.length + 1,
       })
