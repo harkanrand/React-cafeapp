@@ -6,8 +6,41 @@ import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 class InventoryListDetails extends React.Component {
+  state = {
+    fetched: false,
+  };
+
+  componentDidUpdate() {
+    const { inventoryList } = this.props;
+    if (
+      (!this.state.fetched && inventoryList) ||
+      this.state.inventoryList?.items?.length !== inventoryList?.items?.length
+    ) {
+      this.setState({
+        fetched: true,
+        inventoryList,
+      });
+    }
+  }
+
+  itemInStock(key, inStock) {
+    const inventoryList = JSON.parse(JSON.stringify(this.state.inventoryList));
+    inventoryList.items[key].inStock = inStock;
+    inventoryList.items[key].stock = inStock
+      ? inventoryList.items[key].par
+      : null;
+    this.setState({ inventoryList });
+  }
+
+  changeStock(key, stock) {
+    const inventoryList = JSON.parse(JSON.stringify(this.state.inventoryList));
+    inventoryList.items[key].stock = stock;
+    this.setState({ inventoryList });
+  }
+
   render() {
-    const { inventoryList, inventoryItems, auth, location } = this.props;
+    const { auth } = this.props;
+    const { inventoryList } = this.state;
 
     if (!auth.uid) return <Redirect to="/signin" />;
     if (inventoryList) {
@@ -15,8 +48,15 @@ class InventoryListDetails extends React.Component {
         <div className="container section project-details">
           <div className="card z-depth-0">
             <div className="card-content">
-              <span className="card-title">{inventoryList.name}</span>
-              <p>description: {inventoryList.description}</p>
+              <span className="card-title">{`Conduct inventory for: ${inventoryList.name}`}</span>
+              <div className="row">
+                <p className="col s9">
+                  Description: {inventoryList.description}
+                </p>
+                <button className="col s2 offset-s1 waves-effect waves-light btn pink lighten-1 z-depth-0">
+                  Submit
+                </button>
+              </div>
             </div>
 
             <div className="card-action white ligthen-4 grey-text">
@@ -24,30 +64,47 @@ class InventoryListDetails extends React.Component {
                 <table className="responsive-tabe highlight centered itemtable">
                   <thead>
                     <tr>
-                      <th>Qty.</th>
                       <th>Item</th>
-                      <th>Urgency</th>
+                      <th>Par</th>
+                      <th>Stock</th>
+                      <th>In Stock</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {inventoryList?.items?.map((itemId, i) => {
-                      const item = inventoryItems?.find(
-                        (item) => item.id === itemId
-                      );
-                      return item ? (
-                        <tr key={i}>
-                          <td>{item.par}</td>
-                          <td>
-                            <Link to={"/item/" + item.id} key={item.id}>
-                              {item.name}
-                            </Link>
-                          </td>
-                          <td>{item.urgency}</td>
-                        </tr>
-                      ) : (
-                        <tr key={i} />
-                      );
-                    })}
+                    {inventoryList?.items?.map((item, i) => (
+                      <tr key={i}>
+                        <td>
+                          <Link to={"/item/" + item.id} key={item.id}>
+                            {item.name}
+                          </Link>
+                        </td>
+                        <td>{item.par}</td>
+                        <td>
+                          <input
+                            disabled={item.inStock}
+                            onChange={(e) =>
+                              this.changeStock(i, e.target.value)
+                            }
+                            placeholder="Stock"
+                            type="number"
+                            value={item.stock || ""}
+                          />
+                        </td>
+                        <td>
+                          <p>
+                            <label>
+                              <input
+                                onClick={(e) =>
+                                  this.itemInStock(i, e.target.checked)
+                                }
+                                type="checkbox"
+                              />
+                              <span></span>
+                            </label>
+                          </p>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -66,25 +123,17 @@ class InventoryListDetails extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  //console.log(state);
-
-  // Todo: We should get just the specific list directly from firestore instead of all of the inventory lists and then filtering it out here
-  console.log("state: ", state);
   const id = ownProps.match.params.id;
   const inventoryLists = state.firestore.data.inventoryLists;
   const inventoryList = inventoryLists ? inventoryLists[id] : null;
 
-  console.log("inventoryList: ", inventoryList);
-
   const inventoryItems = state.firestore.ordered.inventoryItems;
-  console.log("inventoryItems: ", inventoryItems);
 
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
     inventoryList: inventoryList,
     inventoryItems: inventoryItems,
-    categories: state.item.categories,
   };
 };
 

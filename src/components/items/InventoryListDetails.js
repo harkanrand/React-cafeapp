@@ -56,7 +56,9 @@ class InventoryListDetails extends React.Component {
                       className="dropdown-trigger btn"
                       onClick={() => this.setState({ show: true })}
                     >
-                      {category ? category : "All"}
+                      {category
+                        ? category.charAt(0).toUpperCase() + category.slice(1)
+                        : "All"}
                     </a>
 
                     <ul
@@ -72,7 +74,9 @@ class InventoryListDetails extends React.Component {
                                 this.setState({ category: name, show: false })
                               }
                             >
-                              {!name ? "All" : name}
+                              {!name
+                                ? "All"
+                                : name.charAt(0).toUpperCase() + name.slice(1)}
                             </a>
                           </li>
                         );
@@ -113,8 +117,7 @@ class InventoryListDetails extends React.Component {
                               }}
                               style={{ cursor: "pointer" }}
                             >
-                              {" "}
-                              Add{" "}
+                              Add
                             </a>
                           </td>
                           <td>{item.name}</td>

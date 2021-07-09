@@ -1,5 +1,5 @@
 const initState = {
-  categories: ["", "Dairy", "Meat", "Produce", "Cheese", "Supplies", "Other"],
+  categories: ["", "dairy", "meat", "produce", "cheese", "supplies", "other"],
 };
 
 const itemReducer = (state = initState, action) => {

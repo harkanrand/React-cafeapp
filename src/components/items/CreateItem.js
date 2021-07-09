@@ -60,7 +60,7 @@ class CreateItem extends Component {
               className="col s8"
               type="text"
               id="category"
-              value={category}
+              value={category.charAt(0).toUpperCase() + category.slice(1)}
               disabled
             />
             <div className="col s3 offset-s1">
@@ -84,7 +84,7 @@ class CreateItem extends Component {
                             this.setState({ category, show: false })
                           }
                         >
-                          {category}
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
                         </a>
                       </li>
                     )

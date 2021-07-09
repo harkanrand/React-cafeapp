@@ -60,7 +60,7 @@ class ItemDetails extends React.Component {
   render() {
     //const id = props.match.params.id;
     const { inventoryItem, auth, categories } = this.props;
-    const { items } = this.state;
+    const { items, category } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (items) {
@@ -78,7 +78,7 @@ class ItemDetails extends React.Component {
                     className="col s8"
                     type="text"
                     id="category"
-                    value={this.state.category}
+                    value={category.charAt(0).toUpperCase() + category.slice(1)}
                     disabled
                   />
                   <div className="col s3 offset-s1">
@@ -98,6 +98,7 @@ class ItemDetails extends React.Component {
                           category && (
                             <li key={i}>
                               <a
+                                style={{ textTransform: "capitalize" }}
                                 onClick={() =>
                                   this.setState({
                                     category,
@@ -116,7 +117,7 @@ class ItemDetails extends React.Component {
               ) : (
                 <p>
                   Category: <br />
-                  {this.state.category}
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
                 </p>
               )}
               {moment(inventoryItem.dateCreated.toDate()).calendar()}

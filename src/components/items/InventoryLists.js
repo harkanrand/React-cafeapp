@@ -5,8 +5,14 @@ import { compose } from "redux";
 import { Redirect, NavLink, Link } from "react-router-dom";
 
 class InventoryLists extends Component {
+  state = {
+    path: null,
+  };
+
   render() {
     const { inventoryLists, auth } = this.props;
+    const { path } = this.state;
+    if (path) return <Redirect to={path} />;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (inventoryLists) {
@@ -41,18 +47,23 @@ class InventoryLists extends Component {
                     return (
                       <tr key={list.id}>
                         <td>
-                          <Link
-                            to={`/inventory/${list.id}/conduct`}
+                          <a
+                            onClick={() =>
+                              this.setState({
+                                path: `/inventory/${list.id}/conduct`,
+                              })
+                            }
                             key={list.id}
+                            className="waves-effect waves-light btn-small"
                           >
-                            {`Conduct ${list.name}`}
-                          </Link>
+                            {list.name}
+                          </a>
                         </td>
                         <td>{list.description}</td>
                         <td>({list.itemCount})</td>
                         <td>
                           <Link to={"/inventory/" + list.id} key={list.id}>
-                            {`Edit ${list.name}`}
+                            <i className="material-icons">edit</i>
                           </Link>
                         </td>
                       </tr>
