@@ -23,18 +23,25 @@ class InventoryListDetails extends React.Component {
     }
   }
 
-  itemInStock(key, inStock) {
+  changeStatus(key, status) {
     const inventoryList = JSON.parse(JSON.stringify(this.state.inventoryList));
-    inventoryList.items[key].inStock = inStock;
-    inventoryList.items[key].stock = inStock
-      ? inventoryList.items[key].par
-      : null;
+    inventoryList.items[key].status = status;
     this.setState({ inventoryList });
   }
 
   changeStock(key, stock) {
     const inventoryList = JSON.parse(JSON.stringify(this.state.inventoryList));
+    const { par } = inventoryList.items[key];
+
     inventoryList.items[key].stock = stock;
+
+    inventoryList.items[key].status =
+      parseInt(stock) >= parseInt(par)
+        ? "ok"
+        : parseInt(stock) === 0
+        ? "out"
+        : "low";
+
     this.setState({ inventoryList });
   }
 
@@ -61,7 +68,7 @@ class InventoryListDetails extends React.Component {
 
             <div className="card-action white ligthen-4 grey-text">
               <div>
-                <table className="responsive-tabe highlight centered itemtable">
+                <table className="responsive-tabe highlight itemtable">
                   <thead>
                     <tr>
                       <th>Item</th>
@@ -74,7 +81,11 @@ class InventoryListDetails extends React.Component {
                     {inventoryList?.items?.map((item, i) => (
                       <tr key={i}>
                         <td>
-                          <Link to={"/item/" + item.id} key={item.id}>
+                          <Link
+                            style={{ marginLeft: 5 }}
+                            to={"/item/" + item.id}
+                            key={item.id}
+                          >
                             {item.name}
                           </Link>
                         </td>
@@ -91,17 +102,22 @@ class InventoryListDetails extends React.Component {
                           />
                         </td>
                         <td>
-                          <p>
-                            <label>
-                              <input
-                                onClick={(e) =>
-                                  this.itemInStock(i, e.target.checked)
-                                }
-                                type="checkbox"
-                              />
-                              <span></span>
-                            </label>
-                          </p>
+                          {["ok", "low", "out"].map((key) => (
+                            <p>
+                              <label>
+                                <input
+                                  checked={item.status === key}
+                                  onClick={(e) => this.changeStatus(i, key)}
+                                  name="key"
+                                  type="radio"
+                                  value={item.status || false}
+                                />
+                                <span style={{ textTransform: "capitalize" }}>
+                                  {key}
+                                </span>
+                              </label>
+                            </p>
+                          ))}
                         </td>
                       </tr>
                     ))}
