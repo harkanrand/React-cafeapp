@@ -86,7 +86,8 @@ class InventoryListDetails extends React.Component {
                             to={"/item/" + item.id}
                             key={item.id}
                           >
-                            {item.name}
+                            {item.name +
+                              (item.unit ? " (" + item.unit + ")" : "")}
                           </Link>
                         </td>
                         <td>{item.par}</td>
@@ -103,11 +104,11 @@ class InventoryListDetails extends React.Component {
                         </td>
                         <td>
                           {["ok", "low", "out"].map((key) => (
-                            <p>
+                            <p key={key}>
                               <label>
                                 <input
                                   checked={item.status === key}
-                                  onClick={(e) => this.changeStatus(i, key)}
+                                  onChange={(e) => this.changeStatus(i, key)}
                                   name="key"
                                   type="radio"
                                   value={item.status || false}

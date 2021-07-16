@@ -9,6 +9,7 @@ class CreateItem extends Component {
     description: "",
     par: "",
     category: "",
+    unit: "",
     show: false,
   };
 
@@ -17,16 +18,16 @@ class CreateItem extends Component {
       [e.target.id]: e.target.value,
     });
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
-    //console.log(this.state);
     this.props.createItem(this.state);
     this.props.history.push("/itemList");
   };
 
   render() {
     const { auth, categories } = this.props;
-    const { category, show } = this.state;
+    const { category, show, unit } = this.state;
     console.log(this.props);
     //   console.log(this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
@@ -37,7 +38,7 @@ class CreateItem extends Component {
           <h5 className="grey-text text-darken-3">Create New Item</h5>
 
           <div className="input-field">
-            <label htmlFor="name">name</label>
+            <label htmlFor="name">Name</label>
             <input type="text" id="name" onChange={this.handleChange} />
           </div>
 
@@ -51,8 +52,20 @@ class CreateItem extends Component {
           </div>
 
           <div className="input-field">
-            <label htmlFor="par">par amount</label>
+            <label htmlFor="par">Par amount</label>
             <input type="text" id="par" onChange={this.handleChange} />
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="unit">Unit e.g. bottles, oz, bags, etc.</label>
+            <input
+              type="text"
+              id="unit"
+              onChange={(e) =>
+                /^$|^[A-Za-z ]+$/.test(e.target.value) && this.handleChange(e)
+              }
+              value={unit}
+            />
           </div>
 
           <div className="input-field row">

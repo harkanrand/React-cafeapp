@@ -32,6 +32,10 @@ class ItemDetails extends React.Component {
             value: this.props.inventoryItem?.description,
             label: "Description",
           },
+          unit: {
+            value: this.props.inventoryItem?.unit,
+            label: "Unit",
+          },
         },
       });
     }
