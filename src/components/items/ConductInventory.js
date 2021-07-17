@@ -45,6 +45,12 @@ class InventoryListDetails extends React.Component {
     this.setState({ inventoryList });
   }
 
+  disableSubmit() {
+    return !this.state.inventoryList.items.every((item) => item.status);
+  }
+
+  submit() {}
+
   render() {
     const { auth } = this.props;
     const { inventoryList } = this.state;
@@ -60,7 +66,11 @@ class InventoryListDetails extends React.Component {
                 <p className="col s9">
                   Description: {inventoryList.description}
                 </p>
-                <button className="col s2 offset-s1 waves-effect waves-light btn pink lighten-1 z-depth-0">
+                <button
+                  disabled={this.disableSubmit()}
+                  onClick={() => this.submit()}
+                  className="col s2 offset-s1 waves-effect waves-light btn pink lighten-1 z-depth-0"
+                >
                   Submit
                 </button>
               </div>
@@ -109,7 +119,7 @@ class InventoryListDetails extends React.Component {
                                 <input
                                   checked={item.status === key}
                                   onChange={(e) => this.changeStatus(i, key)}
-                                  name="key"
+                                  name={item.name + i}
                                   type="radio"
                                   value={item.status || false}
                                 />
