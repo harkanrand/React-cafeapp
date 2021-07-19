@@ -77,6 +77,30 @@ export const addItem = (item) => {
   };
 };
 
+export const conductInventory = (inventory) => {
+  return (dispatch, getState, { getFirebase }) => {
+    const firestore = getFirebase().firestore();
+    const profile = getState().firebase.profile;
+
+    firestore
+      .collection("cafes")
+      .doc(profile.defaultCafeId)
+      .collection("inventories")
+      .add({
+        inventory,
+        dateCreated: new Date(),
+      })
+      .then(() => {
+        dispatch({
+          type: "CONDUCT_INVENTORY_SUCCESS",
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: "CONDUCT_INVENTORY_ERROR" }, err);
+      });
+  };
+};
+
 export const addItemToList = (listId, item) => {
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database

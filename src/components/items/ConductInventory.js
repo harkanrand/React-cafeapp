@@ -4,6 +4,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { conductInventory } from "../../store/actions/itemActions";
 
 class InventoryListDetails extends React.Component {
   state = {
@@ -164,8 +165,14 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    conductInventory: (inventory) => dispatch(conductInventory(inventory)),
+  };
+};
+
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect((props, ownProps) => {
     if (!props.profile.defaultCafeId) {
       return [];

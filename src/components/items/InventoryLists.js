@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect, NavLink, Link } from "react-router-dom";
+import moment from "moment";
 
 class InventoryLists extends Component {
   state = {
@@ -10,11 +11,12 @@ class InventoryLists extends Component {
   };
 
   render() {
-    const { inventoryLists, auth } = this.props;
+    const { inventoryLists, auth, inventories } = this.props;
     const { path } = this.state;
     if (path) return <Redirect to={path} />;
     if (!auth.uid) return <Redirect to="/signin" />;
 
+    console.log(inventories);
     if (inventoryLists) {
       return (
         <div className="product container">
@@ -32,18 +34,19 @@ class InventoryLists extends Component {
             </NavLink>
           </div>
 
-          <div className="row">
-            <table className="responsive-tabe highlight centered itemtable">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inventoryLists &&
-                  inventoryLists.map((list) => {
+          <div className="card z-depth-0">
+            <div className="card-content">
+              <span className="card-title">Inventory lists</span>
+              <table className="responsive-tabe highlight itemtable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventoryLists?.map((list) => {
                     return (
                       <tr key={list.id}>
                         <td>
@@ -69,8 +72,35 @@ class InventoryLists extends Component {
                       </tr>
                     );
                   })}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="card z-depth-0">
+            <div className="card-content">
+              <span className="card-title">Inventory log</span>
+              <table className="responsive-tabe highlight itemtable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventories?.map((inventory) => {
+                    return (
+                      <tr key={inventory.name}>
+                        <td>{inventory.name}</td>
+                        <td>
+                          {" "}
+                          {moment(inventory.dateCreated.toDate()).calendar()}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       );
@@ -90,6 +120,7 @@ const mapStateToProps = (state) => {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
     inventoryLists: state.firestore.ordered.inventoryLists,
+    inventories: state.firestore.ordered.inventories,
   };
 };
 
@@ -107,6 +138,12 @@ export default compose(
         doc: props.profile.defaultCafeId,
         subcollections: [{ collection: "inventoryList" }],
         storeAs: "inventoryLists",
+      },
+      {
+        collection: "cafes",
+        doc: props.profile.defaultCafeId,
+        subcollections: [{ collection: "inventories" }],
+        storeAs: "inventories",
       },
     ];
   })
