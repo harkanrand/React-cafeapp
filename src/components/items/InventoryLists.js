@@ -16,7 +16,6 @@ class InventoryLists extends Component {
     if (path) return <Redirect to={path} />;
     if (!auth.uid) return <Redirect to="/signin" />;
 
-    console.log(inventories);
     if (inventoryLists) {
       return (
         <div className="product container">
@@ -89,7 +88,7 @@ class InventoryLists extends Component {
                 <tbody>
                   {inventories?.map((inventory) => {
                     return (
-                      <tr key={inventory.name}>
+                      <tr key={inventory.id}>
                         <td>{inventory.name}</td>
                         <td>
                           {" "}

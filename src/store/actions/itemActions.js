@@ -82,12 +82,15 @@ export const conductInventory = (inventory) => {
     const firestore = getFirebase().firestore();
     const profile = getState().firebase.profile;
 
+    delete inventory.dateUpdated;
+    delete inventory.itemCount;
+
     firestore
       .collection("cafes")
       .doc(profile.defaultCafeId)
       .collection("inventories")
       .add({
-        inventory,
+        ...inventory,
         dateCreated: new Date(),
       })
       .then(() => {

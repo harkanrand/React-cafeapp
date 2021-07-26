@@ -50,7 +50,10 @@ class InventoryListDetails extends React.Component {
     return !this.state.inventoryList.items.every((item) => item.status);
   }
 
-  submit() {}
+  submit() {
+    this.props.conductInventory(this.state.inventoryList);
+    this.props.history.push("/inventoryLists");
+  }
 
   render() {
     const { auth } = this.props;
