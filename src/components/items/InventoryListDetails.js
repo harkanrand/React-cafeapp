@@ -4,7 +4,10 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { addItemToList } from "../../store/actions/itemActions";
+import {
+  addItemToList,
+  deleteItemFromList,
+} from "../../store/actions/itemActions";
 
 class InventoryListDetails extends React.Component {
   state = {
@@ -134,7 +137,7 @@ class InventoryListDetails extends React.Component {
             <div className="card z-depth-0">
               <div className="card-content">
                 <span className="card-title">{inventoryList.name}</span>
-                <p>description: {inventoryList.description}</p>
+                <p>Description: {inventoryList.description}</p>
               </div>
 
               <div className="card-action white ligthen-4 grey-text">
@@ -145,6 +148,7 @@ class InventoryListDetails extends React.Component {
                         <th>Qty.</th>
                         <th>Item</th>
                         <th>Urgency</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -157,6 +161,17 @@ class InventoryListDetails extends React.Component {
                             </Link>
                           </td>
                           <td>{item.urgency}</td>
+                          <td>
+                            <i
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                this.props.deleteItemFromList(listId, i)
+                              }
+                              className="material-icons"
+                            >
+                              delete
+                            </i>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -180,6 +195,8 @@ class InventoryListDetails extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     addItemToList: (listId, itemId) => dispatch(addItemToList(listId, itemId)),
+    deleteItemFromList: (listId, itemId) =>
+      dispatch(deleteItemFromList(listId, itemId)),
   };
 };
 const mapStateToProps = (state, ownProps) => {

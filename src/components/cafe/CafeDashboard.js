@@ -27,8 +27,8 @@ export const CafeDashboard = (props) => {
             <div className="card-action white ligthen-4 grey-text">
               <div>
                 <p>
-                  {profile.defaultCafeRole}: {profile.firstName}{" "}
-                  {profile.lastName}
+                  {profile.defaultCafeRole ? profile.defaultCafeRole + ":" : ""}
+                  {profile.firstName} {profile.lastName}
                 </p>
               </div>
             </div>

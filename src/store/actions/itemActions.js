@@ -104,6 +104,38 @@ export const conductInventory = (inventory) => {
   };
 };
 
+export const deleteItemFromList = (listId, item) => {
+  return (dispatch, getState, { getFirebase }) => {
+    const firestore = getFirebase().firestore();
+    const { inventoryLists } = getState()?.firestore?.data;
+    const profile = getState().firebase.profile;
+
+    const items = inventoryLists[listId]?.items.slice();
+    console.log(items);
+    items.splice(item, 1);
+
+    console.log(items);
+    firestore
+      .collection("cafes")
+      .doc(profile.defaultCafeId)
+      .collection("inventoryList")
+      .doc(listId)
+      .update({
+        items: [...items],
+        dateUpdated: new Date(),
+        itemCount: items.length + 1,
+      })
+      .then(() => {
+        dispatch({
+          type: "DELETE_FROM_INVENTORY_SUCCESS",
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: "DELETE_FROM_INVENTORY_ERROR" }, err);
+      });
+  };
+};
+
 export const addItemToList = (listId, item) => {
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database

@@ -91,7 +91,6 @@ class InventoryLists extends Component {
                       <tr key={inventory.id}>
                         <td>{inventory.name}</td>
                         <td>
-                          {" "}
                           {moment(inventory.dateCreated.toDate()).calendar()}
                         </td>
                       </tr>
