@@ -24,6 +24,10 @@ class InventoryListDetails extends React.Component {
     }
   }
 
+  editNote(note) {
+    if (note.length < 500) this.setState({ note });
+  }
+
   changeStatus(key, status) {
     const inventoryList = JSON.parse(JSON.stringify(this.state.inventoryList));
     inventoryList.items[key].status = status;
@@ -51,7 +55,7 @@ class InventoryListDetails extends React.Component {
   }
 
   submit() {
-    this.props.conductInventory(this.state.inventoryList);
+    this.props.conductInventory(this.state.inventoryList, this.state.note);
     this.props.history.push("/inventoryLists");
   }
 
@@ -70,13 +74,6 @@ class InventoryListDetails extends React.Component {
                 <p className="col s9">
                   Description: {inventoryList.description}
                 </p>
-                <button
-                  disabled={this.disableSubmit()}
-                  onClick={() => this.submit()}
-                  className="col s2 offset-s1 waves-effect waves-light btn pink lighten-1 z-depth-0"
-                >
-                  Submit
-                </button>
               </div>
             </div>
 
@@ -140,6 +137,24 @@ class InventoryListDetails extends React.Component {
                 </table>
               </div>
             </div>
+            <div className="card-content row">
+              <div style={{ marginTop: 0 }} className="input-field col s9">
+                <textarea
+                  onChange={(e) => this.editNote(e.target.value)}
+                  id="textarea"
+                  className="materialize-textarea"
+                  data-length="500"
+                ></textarea>
+                <label htmlFor="textarea">Notes</label>
+              </div>
+              <button
+                disabled={this.disableSubmit()}
+                onClick={() => this.submit()}
+                className="col s2 offset-s1 waves-effect waves-light btn pink lighten-1 z-depth-0"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -157,7 +172,6 @@ const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   const inventoryLists = state.firestore.data.inventoryLists;
   const inventoryList = inventoryLists ? inventoryLists[id] : null;
-
   const inventoryItems = state.firestore.ordered.inventoryItems;
 
   return {
@@ -170,7 +184,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    conductInventory: (inventory) => dispatch(conductInventory(inventory)),
+    conductInventory: (inventory, note) =>
+      dispatch(conductInventory(inventory, note)),
   };
 };
 

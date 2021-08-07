@@ -77,7 +77,7 @@ export const addItem = (item) => {
   };
 };
 
-export const conductInventory = (inventory) => {
+export const conductInventory = (inventory, note) => {
   return (dispatch, getState, { getFirebase }) => {
     const firestore = getFirebase().firestore();
     const profile = getState().firebase.profile;
@@ -91,6 +91,7 @@ export const conductInventory = (inventory) => {
       .collection("inventories")
       .add({
         ...inventory,
+        note,
         dateCreated: new Date(),
       })
       .then(() => {
@@ -144,24 +145,27 @@ export const addItemToList = (listId, item) => {
     const profile = getState().firebase.profile;
 
     const items = inventoryLists[listId]?.items;
-    firestore
-      .collection("cafes")
-      .doc(profile.defaultCafeId)
-      .collection("inventoryList")
-      .doc(listId)
-      .update({
-        items: [...items, item],
-        dateUpdated: new Date(),
-        itemCount: items.length + 1,
-      })
-      .then(() => {
-        dispatch({
-          type: "ADD_TO_INVENTORY_SUCCESS",
+
+    let exists = items?.some((element) => element.id === item.id);
+    if (!exists)
+      firestore
+        .collection("cafes")
+        .doc(profile.defaultCafeId)
+        .collection("inventoryList")
+        .doc(listId)
+        .update({
+          items: [...items, item],
+          dateUpdated: new Date(),
+          itemCount: items.length + 1,
+        })
+        .then(() => {
+          dispatch({
+            type: "ADD_TO_INVENTORY_SUCCESS",
+          });
+        })
+        .catch((err) => {
+          dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
         });
-      })
-      .catch((err) => {
-        dispatch({ type: "ADD_TO_INVENTORY_ERROR" }, err);
-      });
   };
 };
 
