@@ -4,24 +4,30 @@ export const createProduct = (product) => {
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
 
-    const priceHistory = [
-      {
-        price: product.price,
-        createdBy: authorId,
-        dateCreated: new Date(),
-      },
-    ];
-
     firestore
       .collection("products")
       .add({
         ...product,
-        priceHistory: priceHistory,
+        price: parseFloat(product.price),
         createdBy: authorId,
         dateCreated: new Date(),
       })
-      .then(() => {
-        dispatch({ type: "CREATE_PRODUCT_SUCCESS" });
+      .then((doc) => {
+        firestore
+          .collection("products")
+          .doc(doc.id)
+          .collection("priceHistory")
+          .add({
+            price: parseFloat(product.price),
+            createdBy: authorId,
+            dateCreated: new Date(),
+          })
+          .then(() => {
+            dispatch({ type: "CREATE_PRODUCT_SUCCESS" });
+          })
+          .catch((err) => {
+            dispatch({ type: "CREATE_PRODUCT_ERROR" }, err);
+          });
       })
       .catch((err) => {
         dispatch({ type: "CREATE_PRODUCT_ERROR" }, err);
@@ -35,26 +41,31 @@ export const updateProduct = (productId, product) => {
     const firestore = getFirebase().firestore();
     const authorId = getState().firebase.auth.uid;
 
-    const priceHistory = [
-      ...product.priceHistory,
-      {
-        price: product.price,
-        createdBy: authorId,
-        dateCreated: new Date(),
-      },
-    ];
-
     firestore
       .collection("products")
       .doc(productId)
       .update({
         ...product,
-        priceHistory,
+        price: parseFloat(product.price),
         updatedBy: authorId,
         dateUpdated: new Date(),
       })
       .then(() => {
-        dispatch({ type: "UPDATE_PRODUCT_SUCCESS" });
+        firestore
+          .collection("products")
+          .doc(productId)
+          .collection("priceHistory")
+          .add({
+            price: parseFloat(product.price),
+            createdBy: authorId,
+            dateCreated: new Date(),
+          })
+          .then(() => {
+            dispatch({ type: "UPDATE_PRODUCT_SUCCESS" });
+          })
+          .catch((err) => {
+            dispatch({ type: "UPDATE_PRODUCT_ERROR" }, err);
+          });
       })
       .catch((err) => {
         dispatch({ type: "UPDATE_PRODUCT_ERROR" }, err);

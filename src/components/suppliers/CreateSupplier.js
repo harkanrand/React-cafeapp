@@ -27,7 +27,7 @@ class CreateSupplier extends Component {
 
   render() {
     const { auth } = this.props;
-    if (!auth.uid) return <Redirect to="/productlist" />;
+    if (!auth.uid) return <Redirect to="/products" />;
 
     return (
       <div className="container">

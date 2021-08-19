@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import createProduct from '../../store/actions/productActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import createProduct from "../../store/actions/productActions";
+import { Redirect } from "react-router-dom";
 
 class CreateProduct extends Component {
   state = {
-    name: '',
-    description: '',
-    brand: '',
-    sku: '',
-    quantity: '',
-    price: '',
+    name: "",
+    description: "",
+    brand: "",
+    sku: "",
+    quantity: "",
+    price: "",
   };
 
   handleChange = (e) => {
@@ -21,12 +21,12 @@ class CreateProduct extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.createProduct(this.state);
-    this.props.history.push('/productList');
+    this.props.history.push("/products");
   };
 
   render() {
     const { auth } = this.props;
-    if (!auth.uid) return <Redirect to="/productlist" />;
+    if (!auth.uid) return <Redirect to="/products" />;
 
     return (
       <div className="container">
@@ -35,7 +35,12 @@ class CreateProduct extends Component {
 
           <div className="input-field col s12">
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" className="validate" onChange={this.handleChange} />
+            <input
+              type="text"
+              id="name"
+              className="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field col s12">
@@ -46,14 +51,19 @@ class CreateProduct extends Component {
           <div className="row">
             <div className="input-field col s9">
               <label htmlFor="brand">Brand</label>
-              <input type="text" id="brand" className="validate" onChange={this.handleChange} />
+              <input
+                type="text"
+                id="brand"
+                className="validate"
+                onChange={this.handleChange}
+              />
             </div>
             <div className="input-field col s3">
               <label htmlFor="brand">SKU</label>
               <input type="text" id="sku" onChange={this.handleChange} />
             </div>
           </div>
-          
+
           <div className="row">
             <div className="input-field col s6">
               <label htmlFor="price">Price</label>

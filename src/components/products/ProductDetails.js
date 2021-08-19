@@ -63,15 +63,12 @@ class ProductDetails extends React.Component {
       item = { ...item, [key]: value };
     });
 
-    if (this.state.edit)
-      this.props.updateProduct(productId, {
-        ...item,
-        priceHistory: product?.priceHistory,
-      });
+    if (this.state.edit) this.props.updateProduct(productId, item);
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
   render() {
+    console.log(this.props);
     const { product, auth } = this.props;
     const { items } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
@@ -110,16 +107,36 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id;
-  const products = state.firestore.data.products;
-  const product = products ? products[id] : null;
   return {
-    product,
-    productId: id,
+    product: state.firestore.data.product,
+    productId: ownProps.match.params.id,
     auth: state.firebase.auth,
+    priceHistory: state.firestore.data.priceHistory,
   };
 };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: "products" }])
+  firestoreConnect((props, ownProps) => {
+    if (!ownProps.match.params.id) {
+      return [];
+    }
+
+    return [
+      {
+        collection: "products",
+        doc: ownProps.match.params.id,
+        storeAs: "product",
+      },
+      {
+        collection: "products",
+        doc: ownProps.match.params.id,
+        subcollections: [
+          {
+            collection: "priceHistory",
+          },
+        ],
+        storeAs: "priceHistory",
+      },
+    ];
+  })
 )(ProductDetails);
