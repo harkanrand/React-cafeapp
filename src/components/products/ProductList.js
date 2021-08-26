@@ -16,14 +16,13 @@ class ProductList extends Component {
       <div className="product container">
         <div className="row">
           <div className="product-list section">
-            {products &&
-              products.map((product) => {
-                return (
-                  <Link to={"/product/" + product.id} key={product.id}>
-                    <ProductSummary product={product} />
-                  </Link>
-                );
-              })}
+            {products?.map((product) => {
+              return (
+                <Link to={"/product/" + product.id} key={product.id}>
+                  <ProductSummary product={product} />
+                </Link>
+              );
+            })}
           </div>
         </div>
         <div className="row">

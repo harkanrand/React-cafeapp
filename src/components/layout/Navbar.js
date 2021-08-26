@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import SignedInLinks from './SignedInLinks';
-import SignedOutLinks from './SignedOutLinks';
-import { connect } from 'react-redux';
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+import SignedInLinks from "./SignedInLinks";
+import SignedOutLinks from "./SignedOutLinks";
+import { connect } from "react-redux";
 
 const Navbar = (props) => {
   const { auth, profile } = props;
@@ -26,6 +26,9 @@ const Navbar = (props) => {
         </li>
         <li className="tab">
           <NavLink to="/products">Products</NavLink>
+        </li>
+        <li className="tab">
+          <NavLink to="/shopping">Shopping List</NavLink>
         </li>
         <li className="tab">
           <NavLink to="/suppliers">Suppliers</NavLink>

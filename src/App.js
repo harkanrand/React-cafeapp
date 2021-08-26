@@ -33,6 +33,7 @@ import UserDetails from "./components/users/UserDetails";
 
 import CafeTest from "./components/test/cafeTest";
 import CafeDetails from "./components/cafe/CafeDetails";
+import ShoppingList from "./components/shopping/ShoppingList";
 
 class App extends Component {
   render() {
@@ -61,6 +62,8 @@ class App extends Component {
             <Route path="/products" component={ProductList} />
             <Route path="/product/:id" component={ProductDetails} />
             <Route path="/createProduct" component={CreateProduct} />
+
+            <Route path="/shopping" component={ShoppingList} />
 
             <Route path="/suppliers" component={SupplierList} />
             <Route path="/supplier/:id" component={SupplierDetails} />
