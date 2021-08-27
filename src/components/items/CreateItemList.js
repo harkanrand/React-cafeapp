@@ -20,13 +20,13 @@ class CreateItemList extends Component {
     e.preventDefault();
     //console.log(this.state);
     this.props.createItemList(this.state);
-    this.props.history.push("/itemList");
+    this.props.history.push("/items");
   };
 
   render() {
     const { auth } = this.props;
     //   console.log(this.props);
-    if (!auth.uid) return <Redirect to="/itemList" />;
+    if (!auth.uid) return <Redirect to="/items" />;
 
     return (
       <div className="container">

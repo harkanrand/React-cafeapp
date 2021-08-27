@@ -46,7 +46,7 @@ class App extends Component {
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
 
-            <Route path="/itemList" component={ItemList} />
+            <Route path="/items" component={ItemList} />
             <Route path="/item/:id" component={ItemDetails} />
             <Route path="/createItem" component={CreateItem} />
             <Route path="/createItemList" component={CreateItemList} />

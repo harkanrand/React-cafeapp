@@ -22,7 +22,7 @@ class CreateItem extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.createItem(this.state);
-    this.props.history.push("/itemList");
+    this.props.history.push("/items");
   };
 
   render() {

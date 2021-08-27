@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { Redirect, NavLink, Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { Redirect, NavLink, Link } from "react-router-dom";
 
 class ItemList extends Component {
   render() {
     const { inventoryItems, auth } = this.props;
- //   console.log(this.props);
+    //   console.log(this.props);
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (inventoryItems) {
@@ -17,12 +17,6 @@ class ItemList extends Component {
             <NavLink to="/createItem">
               <button className="waves-effect waves-light btn pink lighten-1 z-depth-0">
                 Add New Item
-              </button>
-            </NavLink>
-            {'  '}
-            <NavLink to="/createItemList">
-              <button className="waves-effect waves-light btn pink lighten-1 z-depth-0">
-                Create Inventory List
               </button>
             </NavLink>
           </div>
@@ -41,7 +35,7 @@ class ItemList extends Component {
                     return (
                       <tr key={item.id}>
                         <td>
-                          <Link to={'/item/' + item.id} key={item.id}>
+                          <Link to={"/item/" + item.id} key={item.id}>
                             {item.name}
                           </Link>
                         </td>
@@ -65,7 +59,7 @@ class ItemList extends Component {
 }
 
 const mapStateToProps = (state) => {
-//  console.log('state: ', state)
+  //  console.log('state: ', state)
   return {
     auth: state.firebase.auth,
     profile: state.firebase.profile,
@@ -79,14 +73,14 @@ export default compose(
     if (!props.profile.defaultCafeId) {
       return [];
     }
-        console.log('defaultCafe: ', props.profile.defaultCafeId);
+    console.log("defaultCafe: ", props.profile.defaultCafeId);
 
     return [
       {
-        collection: 'cafes',
+        collection: "cafes",
         doc: props.profile.defaultCafeId,
-        subcollections: [{ collection: 'inventoryItems' }],
-        storeAs: 'inventoryItems',
+        subcollections: [{ collection: "inventoryItems" }],
+        storeAs: "inventoryItems",
       },
     ];
   })

@@ -22,7 +22,7 @@ const Navbar = (props) => {
           <NavLink to="/inventoryLists">Inventory Lists</NavLink>
         </li>
         <li className="tab">
-          <NavLink to="/itemList">Items</NavLink>
+          <NavLink to="/items">Items</NavLink>
         </li>
         <li className="tab">
           <NavLink to="/products">Products</NavLink>

@@ -20,12 +20,6 @@ class InventoryLists extends Component {
       return (
         <div className="product container">
           <div className="row section">
-            <NavLink to="/createItem">
-              <button className="waves-effect waves-light btn pink lighten-1 z-depth-0">
-                Add New Item
-              </button>
-            </NavLink>
-            {"  "}
             <NavLink to="/createItemList">
               <button className="waves-effect waves-light btn pink lighten-1 z-depth-0">
                 Create Inventory List

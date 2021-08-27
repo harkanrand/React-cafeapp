@@ -11,7 +11,6 @@ class AddItemDialog extends React.Component {
   }
 
   render() {
-    console.log("pprops", this.props);
     return (
       <div id="modal1" className="modal">
         <div className="modal-content">

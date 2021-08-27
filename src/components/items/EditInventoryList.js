@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { addItem } from '../../store/actions/itemActions';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { addItem } from "../../store/actions/itemActions";
+import { Redirect } from "react-router-dom";
 
 class EditInventoryList extends Component {
   state = {
-    itemId: '',
-    listId: '',
+    itemId: "",
+    listId: "",
   };
 
   handleChange = (e) => {
@@ -18,13 +18,13 @@ class EditInventoryList extends Component {
     e.preventDefault();
     //console.log(this.state);
     this.props.createItem(this.state);
-    this.props.history.push('/itemList');
+    this.props.history.push("/items");
   };
 
   render() {
     const { auth } = this.props;
     //   console.log(this.props);
-    if (!auth.uid) return <Redirect to="/itemList" />;
+    if (!auth.uid) return <Redirect to="/items" />;
 
     return (
       <div className="container">
