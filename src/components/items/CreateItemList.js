@@ -18,14 +18,12 @@ class CreateItemList extends Component {
   };
   handleSubmit = (e) => {
     e.preventDefault();
-    //console.log(this.state);
     this.props.createItemList(this.state);
     this.props.history.push("/items");
   };
 
   render() {
     const { auth } = this.props;
-    //   console.log(this.props);
     if (!auth.uid) return <Redirect to="/items" />;
 
     return (
@@ -48,7 +46,7 @@ class CreateItemList extends Component {
           </div>
 
           <div className="input-field">
-            <button className="btn pink lighten-1 z-depth-0">Next >></button>
+            <button className="btn pink lighten-1 z-depth-0">Next</button>
           </div>
         </form>
       </div>

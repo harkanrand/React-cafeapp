@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import createProduct from "../../store/actions/productActions";
 import { Redirect } from "react-router-dom";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
 class CreateProduct extends Component {
   state = {
@@ -11,6 +13,8 @@ class CreateProduct extends Component {
     sku: "",
     quantity: "",
     price: "",
+    supplier: "",
+    show: false,
   };
 
   handleChange = (e) => {
@@ -18,14 +22,35 @@ class CreateProduct extends Component {
       [e.target.id]: e.target.value,
     });
   };
+
   handleSubmit = (e) => {
+    const {
+      name,
+      description,
+      brand,
+      sku,
+      quantity,
+      price,
+      supplier,
+    } = this.state;
     e.preventDefault();
-    this.props.createProduct(this.state);
+    this.props.createProduct(
+      {
+        name,
+        description,
+        brand,
+        sku,
+        quantity,
+        price,
+      },
+      supplier
+    );
     this.props.history.push("/products");
   };
 
   render() {
-    const { auth } = this.props;
+    const { auth, suppliers } = this.props;
+    const { show, supplier } = this.state;
     if (!auth.uid) return <Redirect to="/products" />;
 
     return (
@@ -65,12 +90,44 @@ class CreateProduct extends Component {
           </div>
 
           <div className="row">
-            <div className="input-field col s6">
+            <div className="input-field col s4">
               <label htmlFor="price">Price</label>
               <input type="text" id="price" onChange={this.handleChange} />
             </div>
 
-            <div className="input-field col s6">
+            <div className="input-field col s4">
+              <a
+                className="dropdown-trigger btn"
+                onClick={() => this.setState({ show: true })}
+              >
+                {supplier ? supplier.name : "Select Supplier"}
+              </a>
+              <ul
+                style={show ? styles.dropdown : {}}
+                className="dropdown-content"
+              >
+                {suppliers &&
+                  Object.entries(suppliers)?.map(
+                    ([key, value], i) =>
+                      value && (
+                        <li key={i}>
+                          <a
+                            onClick={() =>
+                              this.setState({
+                                supplier: { ...value, id: key },
+                                show: false,
+                              })
+                            }
+                          >
+                            {value.name}
+                          </a>
+                        </li>
+                      )
+                  )}
+              </ul>
+            </div>
+
+            <div className="input-field col s4">
               <label htmlFor="quantity">Quantity</label>
               <input type="text" id="quantity" onChange={this.handleChange} />
             </div>
@@ -85,17 +142,31 @@ class CreateProduct extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  // console.log(state);
+const mapStateToProps = (state, ownProps) => {
   return {
+    suppliers: state.firestore.data.suppliers,
     auth: state.firebase.auth,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createProduct: (product) => dispatch(createProduct(product)),
+    createProduct: (product, supplier) =>
+      dispatch(createProduct(product, supplier)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "suppliers" }])
+)(CreateProduct);
+
+const styles = {
+  dropdown: {
+    left: "inherit",
+    top: "inherit",
+    padding: 0,
+    opacity: 1,
+    display: "block",
+  },
+};

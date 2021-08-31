@@ -1,4 +1,4 @@
-export const createProduct = (product) => {
+export const createProduct = (product, supplier) => {
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database
     const firestore = getFirebase().firestore();
@@ -21,6 +21,7 @@ export const createProduct = (product) => {
             price: parseFloat(product.price),
             createdBy: authorId,
             dateCreated: new Date(),
+            supplierId: supplier.id,
           })
           .then(() => {
             dispatch({ type: "CREATE_PRODUCT_SUCCESS" });
@@ -35,7 +36,7 @@ export const createProduct = (product) => {
   };
 };
 
-export const updateProduct = (productId, product) => {
+export const updateProduct = (productId, product, supplier) => {
   return (dispatch, getState, { getFirebase }) => {
     // make async call to database
     const firestore = getFirebase().firestore();
@@ -59,6 +60,7 @@ export const updateProduct = (productId, product) => {
             price: parseFloat(product.price),
             createdBy: authorId,
             dateCreated: new Date(),
+            supplierId: supplier.id,
           })
           .then(() => {
             dispatch({ type: "UPDATE_PRODUCT_SUCCESS" });
