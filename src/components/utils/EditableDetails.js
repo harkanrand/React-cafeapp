@@ -3,13 +3,14 @@ import React from "react";
 class Details extends React.Component {
   render() {
     //const id = props.match.params.id;
-    const { items, edit } = this.props;
+    const { items, edit, disabled } = this.props;
 
     return (
       <div className="container section project-details">
         <div className="card z-depth-0">
           <div className="card-content">
             <button
+              disabled={edit && disabled}
               onClick={() => this.props.action()}
               className="waves-effect waves-light btn pink lighten-1 z-depth-0"
             >

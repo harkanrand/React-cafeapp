@@ -11,6 +11,8 @@ class ProductDetails extends React.Component {
   state = {
     edit: false,
     set: false,
+    supplier: false,
+    show: false,
   };
 
   componentDidUpdate() {
@@ -31,10 +33,7 @@ class ProductDetails extends React.Component {
             label: "Quantity",
             value: this.props.product?.quantity,
           },
-          price: {
-            label: "Price",
-            value: this.props.product?.price,
-          },
+
           brand: {
             label: "Brand",
             value: this.props.product?.brand,
@@ -42,6 +41,10 @@ class ProductDetails extends React.Component {
           sku: {
             label: "Sku",
             value: this.props.product?.sku,
+          },
+          price: {
+            label: "Price",
+            value: this.props.product?.price,
           },
         },
       });
@@ -56,21 +59,21 @@ class ProductDetails extends React.Component {
   }
 
   updateProduct() {
-    const { productId, product } = this.props;
+    const { productId } = this.props;
 
     let item = {};
     Object.entries(this.state.items).forEach(([key, { value }]) => {
       item = { ...item, [key]: value };
     });
 
-    if (this.state.edit) this.props.updateProduct(productId, item);
+    if (this.state.edit)
+      this.props.updateProduct(productId, item, this.state.supplier);
     this.setState((prev) => ({ edit: !prev.edit }));
   }
 
   render() {
-    console.log(this.props);
-    const { product, auth } = this.props;
-    const { items } = this.state;
+    const { product, auth, suppliers } = this.props;
+    const { items, edit, supplier, show } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
     if (items) {
@@ -78,12 +81,51 @@ class ProductDetails extends React.Component {
         <div className="container section project-details">
           <div className="card z-depth-0">
             <EditableDetails
+              disabled={!supplier}
               items={items}
               changeValue={this.changeValue.bind(this)}
               action={this.updateProduct.bind(this)}
               edit={this.state.edit}
               renderExtra={() => (
-                <div> {moment(product.dateCreated.toDate()).calendar()}</div>
+                <div>
+                  {edit && (
+                    <div>
+                      <a
+                        className="dropdown-trigger btn"
+                        onClick={() => this.setState({ show: true })}
+                      >
+                        {supplier ? supplier.name : "Select Supplier"}
+                      </a>
+                      <ul
+                        style={show ? styles.dropdown : {}}
+                        className="dropdown-content"
+                      >
+                        {suppliers &&
+                          Object.entries(suppliers)?.map(
+                            ([key, value], i) =>
+                              value && (
+                                <li key={i}>
+                                  <a
+                                    onClick={() =>
+                                      this.setState({
+                                        supplier: { ...value, id: key },
+                                        show: false,
+                                      })
+                                    }
+                                  >
+                                    {value.name}
+                                  </a>
+                                </li>
+                              )
+                          )}
+                      </ul>
+                    </div>
+                  )}
+                  <br />
+                  <div className="col s12">
+                    {moment(product.dateCreated.toDate()).calendar()}
+                  </div>
+                </div>
               )}
             />
           </div>
@@ -101,13 +143,14 @@ class ProductDetails extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateProduct: (productId, product) =>
-      dispatch(updateProduct(productId, product)),
+    updateProduct: (productId, product, supplier) =>
+      dispatch(updateProduct(productId, product, supplier)),
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    suppliers: state.firestore.data.suppliers,
     product: state.firestore.data.product,
     productId: ownProps.match.params.id,
     auth: state.firebase.auth,
@@ -137,6 +180,19 @@ export default compose(
         ],
         storeAs: "priceHistory",
       },
+      {
+        collection: "suppliers",
+      },
     ];
   })
 )(ProductDetails);
+
+const styles = {
+  dropdown: {
+    left: "inherit",
+    top: "inherit",
+    padding: 0,
+    opacity: 1,
+    display: "block",
+  },
+};
