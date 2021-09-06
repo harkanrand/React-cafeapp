@@ -11,42 +11,55 @@ class ProductDetails extends React.Component {
   state = {
     edit: false,
     set: false,
+    setLatestPrice: false,
     supplier: false,
     show: false,
   };
 
   componentDidUpdate() {
-    const { product } = this.props;
-    if (!this.state.set && product && product.name) {
+    const { product, latestPrice, suppliers } = this.props;
+    if (!this.state.set && product && product.name && latestPrice) {
       this.setState({
         set: true,
         items: {
           name: {
             label: "Name",
-            value: this.props.product?.name,
+            value: product?.name,
           },
           description: {
             label: "Description",
-            value: this.props.product?.description,
+            value: product?.description,
           },
           quantity: {
             label: "Quantity",
-            value: this.props.product?.quantity,
+            value: product?.quantity,
           },
 
           brand: {
             label: "Brand",
-            value: this.props.product?.brand,
+            value: product?.brand,
           },
           sku: {
             label: "Sku",
-            value: this.props.product?.sku,
+            value: product?.sku,
           },
           price: {
             label: "Price",
-            value: this.props.product?.price,
+            value: product?.price,
           },
         },
+      });
+    }
+
+    if (
+      !this.state.setLatestPrice &&
+      latestPrice &&
+      latestPrice.supplierId &&
+      suppliers
+    ) {
+      this.setState({
+        supplier: suppliers[latestPrice.supplierId],
+        setLatestPrice: true,
       });
     }
   }
@@ -72,10 +85,11 @@ class ProductDetails extends React.Component {
   }
 
   render() {
-    const { product, auth, suppliers } = this.props;
+    const { product, auth, suppliers, latestPrice } = this.props;
     const { items, edit, supplier, show } = this.state;
     if (!auth.uid) return <Redirect to="/signin" />;
 
+    console.log("latestPrice", supplier);
     if (items) {
       return (
         <div className="container section project-details">
@@ -154,7 +168,9 @@ const mapStateToProps = (state, ownProps) => {
     product: state.firestore.data.product,
     productId: ownProps.match.params.id,
     auth: state.firebase.auth,
-    priceHistory: state.firestore.data.priceHistory,
+    latestPrice: state.firestore.data.latestPrice
+      ? Object.values(state.firestore.data.latestPrice)[0]
+      : -1,
   };
 };
 export default compose(
@@ -176,9 +192,11 @@ export default compose(
         subcollections: [
           {
             collection: "priceHistory",
+            orderBy: ["dateCreated", "desc"],
+            limit: 1,
           },
         ],
-        storeAs: "priceHistory",
+        storeAs: "latestPrice",
       },
       {
         collection: "suppliers",
