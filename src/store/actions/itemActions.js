@@ -124,7 +124,7 @@ export const deleteItemFromList = (listId, item) => {
       .update({
         items: [...items],
         dateUpdated: new Date(),
-        itemCount: items.length + 1,
+        itemCount: items.length,
       })
       .then(() => {
         dispatch({
