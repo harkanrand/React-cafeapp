@@ -32,8 +32,6 @@ export const createItemList = (itemList) => {
     const authorId = getState().firebase.auth.uid;
     const profile = getState().firebase.profile;
 
-    console.log("profile: ", profile);
-
     firestore
       .collection("cafes")
       .doc(profile.defaultCafeId)
@@ -105,6 +103,28 @@ export const conductInventory = (inventory, note) => {
   };
 };
 
+export const deleteInventoryList = (listId) => {
+  return (dispatch, getState, { getFirebase }) => {
+    const firestore = getFirebase().firestore();
+    const profile = getState().firebase.profile;
+
+    firestore
+      .collection("cafes")
+      .doc(profile.defaultCafeId)
+      .collection("inventoryList")
+      .doc(listId)
+      .delete()
+      .then(() => {
+        dispatch({
+          type: "DELETE_INVENTORY_SUCCESS",
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: "DELETE_INVENTORY_ERROR" }, err);
+      });
+  };
+};
+
 export const deleteItemFromList = (listId, item) => {
   return (dispatch, getState, { getFirebase }) => {
     const firestore = getFirebase().firestore();
@@ -112,10 +132,9 @@ export const deleteItemFromList = (listId, item) => {
     const profile = getState().firebase.profile;
 
     const items = inventoryLists[listId]?.items.slice();
-    console.log(items);
+
     items.splice(item, 1);
 
-    console.log(items);
     firestore
       .collection("cafes")
       .doc(profile.defaultCafeId)

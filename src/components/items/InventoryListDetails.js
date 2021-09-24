@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
-import { Redirect } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Redirect, Link, NavLink } from "react-router-dom";
 import {
   addItemToList,
   deleteItemFromList,
+  deleteInventoryList,
 } from "../../store/actions/itemActions";
 
 class InventoryListDetails extends React.Component {
@@ -30,11 +30,15 @@ class InventoryListDetails extends React.Component {
     }
   }
 
+  deleteInventoryList(listId) {
+    if (window.confirm("Do you want to delete this inventory list?"))
+      this.props.deleteInventoryList(listId);
+  }
+
   render() {
     const { search, category, show, inventoryList, fetched } = this.state;
-    //const id = props.match.params.id;
+    const listId = this.props.match.params.id;
     const { inventoryItems, auth, location, categories } = this.props;
-    const listId = location.pathname.split("/")[2];
 
     if (!auth.uid) return <Redirect to="/signin" />;
     // console.log('props: ', props);
@@ -48,13 +52,13 @@ class InventoryListDetails extends React.Component {
                 <span className="card-title">Pick from this list</span>
                 <div className="row">
                   <input
-                    className="col s8"
+                    className="col s9"
                     type="text"
                     placeholder="Search item"
                     value={search}
                     onChange={(e) => this.setState({ search: e.target.value })}
                   />
-                  <div className="col s3 offset-s1 ">
+                  <div className="col s3">
                     <a
                       className="dropdown-trigger btn"
                       onClick={() => this.setState({ show: true })}
@@ -135,9 +139,21 @@ class InventoryListDetails extends React.Component {
 
           <div className="container section project-details">
             <div className="card z-depth-0">
-              <div className="card-content">
-                <span className="card-title">{inventoryList.name}</span>
-                <p>Description: {inventoryList.description}</p>
+              <div className="card-content row">
+                <div className="col s4">
+                  <span className="card-title">{inventoryList.name}</span>
+                  <p>Description: {inventoryList.description}</p>
+                </div>
+                <div className="col s4 offset-s4">
+                  <NavLink to="/inventoryLists">
+                    <button
+                      onClick={() => this.deleteInventoryList(listId)}
+                      className="right waves-effect waves-light btn pink lighten-1 z-depth-0"
+                    >
+                      Delete
+                    </button>
+                  </NavLink>
+                </div>
               </div>
 
               <div className="card-action white ligthen-4 grey-text">
@@ -197,6 +213,7 @@ const mapDispatchToProps = (dispatch) => {
     addItemToList: (listId, itemId) => dispatch(addItemToList(listId, itemId)),
     deleteItemFromList: (listId, itemId) =>
       dispatch(deleteItemFromList(listId, itemId)),
+    deleteInventoryList: (listId) => dispatch(deleteInventoryList(listId)),
   };
 };
 const mapStateToProps = (state, ownProps) => {

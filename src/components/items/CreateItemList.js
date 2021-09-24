@@ -16,10 +16,11 @@ class CreateItemList extends Component {
       [e.target.id]: e.target.value,
     });
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.createItemList(this.state);
-    this.props.history.push("/items");
+    this.props.history.push("/inventoryLists");
   };
 
   render() {
